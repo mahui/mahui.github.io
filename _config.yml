@@ -76,3 +76,9 @@ archive_generator:
 deploy:
   type: git
   repo: git@github.com:mahui/mahui.github.io.git
+
+githubEmojis:
+  enable: true
+  className: github-emoji
+  unicode: false
+  localEmojis:

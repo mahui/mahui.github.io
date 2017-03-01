@@ -16,5 +16,19 @@ tags:
 暂且想到集中解决方案
 - 使用 dropbox，OneDriver 之类的文件同步服务同步源文件
 - 另外建一个repo同步源文件
-- 网络上还有一种将源文件提交到分支的做法
-- 
+- 网络上还有一种将源文件提交到新分支的做法
+
+看了`hexo init` 后的 *blog_dir* ,显然 *hexo* 已经考虑到这方面的问题，支持将源文件提交到 *git* 仓库中，因为 *.gitignore* 已经初始化好了。
+
+作为一个稍微有点儿强迫症的狮子座，决定采用新建分支的方法 
+
+``` shell
+cd $blog_dir
+git init 
+git add *
+git checkout -b $branch_name
+git remote add origin git@github.com:xxxx/xxxx.github.io.git
+git push origin $branch_name:$branch_name
+```
+需要注意的是，*_config.yml* 中 deploy 节点不要暴露敏感信息。
+在新的客户端，只需要将代码clone下来，`checkout`到相应分支，`npm install -g hexo-cli`,`npm install` 之后 `new`, `generate`, `deploy` 即可
