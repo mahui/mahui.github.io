@@ -4,9 +4,9 @@
   
   <link href="/atom.xml" rel="self"/>
   
-  <link href="https://mahui.github.io.com/"/>
+  <link href="https://mahui.github.io/"/>
   <updated>2017-03-01T14:44:46.000Z</updated>
-  <id>https://mahui.github.io.com/</id>
+  <id>https://mahui.github.io/</id>
   
   <author>
     <name>马荟</name>
@@ -17,8 +17,8 @@
   
   <entry>
     <title>Hexo部署笔记</title>
-    <link href="https://mahui.github.io.com/2017/03/01/Hexo%E9%83%A8%E7%BD%B2%E7%AC%94%E8%AE%B0/"/>
-    <id>https://mahui.github.io.com/2017/03/01/Hexo部署笔记/</id>
+    <link href="https://mahui.github.io/2017/03/01/Hexo%E9%83%A8%E7%BD%B2%E7%AC%94%E8%AE%B0/"/>
+    <id>https://mahui.github.io/2017/03/01/Hexo部署笔记/</id>
     <published>2017-03-01T08:10:54.000Z</published>
     <updated>2017-03-01T14:44:46.000Z</updated>
     
