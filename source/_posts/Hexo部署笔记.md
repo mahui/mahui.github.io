@@ -32,3 +32,5 @@ git push origin $branch_name:$branch_name
 ```
 需要注意的是，*_config.yml* 中 deploy 节点不要暴露敏感信息。
 在新的客户端，只需要将代码clone下来，`checkout`到相应分支，`npm install -g hexo-cli`,`npm install` 之后 `new`, `generate`, `deploy` 即可
+
+关于源码的维护，可以将当前 repo 的 default branch 设置为源码的分支，以方便后续维护
