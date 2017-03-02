@@ -1,7 +1,11 @@
 ---
 title: Hexo部署笔记
 date: 2017-03-01 16:10:54
+categories:
+- 笔记
 tags:
+- hexo
+- 部署文档
 ---
 
 # 主题选择
@@ -20,11 +24,11 @@ tags:
 
 看了`hexo init` 后的 *blog_dir* ,显然 *hexo* 已经考虑到这方面的问题，支持将源文件提交到 *git* 仓库中，因为 *.gitignore* 已经初始化好了。
 
-作为一个稍微有点儿强迫症的狮子座，决定采用新建分支的方法 
+作为一个稍微有点儿强迫症的狮子座，决定采用新建分支的方法
 
 ``` shell
 cd $blog_dir
-git init 
+git init
 git add *
 git checkout -b $branch_name
 git remote add origin git@github.com:xxxx/xxxx.github.io.git
