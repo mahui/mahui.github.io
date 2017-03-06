@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://mahui.github.io/"/>
-  <updated>2017-03-06T14:26:39.000Z</updated>
+  <updated>2017-03-06T14:55:01.000Z</updated>
   <id>https://mahui.github.io/</id>
   
   <author>
@@ -14,6 +14,50 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>为什么要造轮子</title>
+    <link href="https://mahui.github.io/2017/03/06/%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E9%80%A0%E8%BD%AE%E5%AD%90/"/>
+    <id>https://mahui.github.io/2017/03/06/为什么要造轮子/</id>
+    <published>2017-03-06T14:28:36.000Z</published>
+    <updated>2017-03-06T14:55:01.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<p>当我在 oschina.net 上以 java orm 作为关键词进行搜索的时候，共找到529条结果。那么我为什么还是要写 ur-orm 呢？</p>
+</blockquote>
+<ul>
+<li>与DB交互的时候，只想调用一个方法就行了</li>
+<li>虽然看上去不够高大上，但在代码里写sql感觉就是舒服呀😌</li>
+<li>与查询的时候返回个对象用起来遍历，当然了，这也是 ORM 框架最起码要实现的</li>
+<li>轻量级，轻量级，还是轻量级。在大家都在说轻量级的时候，要做到真正但轻量级，换ORM的时候，只会觉得当前的代码不够用，而不是发现当前的一堆配置，代码是多余的，对另一个框架来说。当然了，这有点儿偏激。</li>
+<li>重要的是，要对味儿。
+<ul>
+<li>用了好多年的 MyBatis 了，至今还是觉得这是个好的框架，但实在不想在项目开始的时候先来一拖它的配置，不管是 resultMap 还是其它。</li>
+<li>JPA 让 Java 开发有了点儿敏捷的意思了，但有时候封装的太深，用起来让人不知所措。</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>当然了，这个轮子，说不定哪天也会变得让人又爱又恨。😄</p>
+</blockquote>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;当我在 oschina.net 上以 java orm 作为关键词进行搜索的时候，共找到529条结果。那么我为什么还是要写 ur-orm 呢？&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;与DB交互的时候，只想调用一个方法就行了&lt;/li&gt;
+    
+    </summary>
+    
+      <category term="日记" scheme="https://mahui.github.io/categories/%E6%97%A5%E8%AE%B0/"/>
+    
+    
+      <category term="杂记" scheme="https://mahui.github.io/tags/%E6%9D%82%E8%AE%B0/"/>
+    
+  </entry>
   
   <entry>
     <title>要做的事情</title>
