@@ -1,0 +1,21 @@
+menu:
+    Blog: /
+    Archive: /archives/
+    Weibo: http://weibo.com/u/1736948104
+    GitHub: https://github.com/mahui
+    Rss: /atom.xml
+
+favicon: /favicon.png
+logo: /favicon.png
+
+# Comment
+# e.g disqus: seansun
+disqus:
+duoshuo:
+
+# Analytics
+# google-analytics:
+ga: UA-79938831-1
+
+# Copyright Infomation
+startyear: 2016
