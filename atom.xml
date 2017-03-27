@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>在这儿写字</title>
+  <title>一个涂鸦板</title>
   
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://mahui.github.io/"/>
-  <updated>2017-03-06T14:55:01.000Z</updated>
+  <updated>2017-03-27T15:33:52.000Z</updated>
   <id>https://mahui.github.io/</id>
   
   <author>
@@ -14,6 +14,98 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Netty用户指南4.x</title>
+    <link href="https://mahui.github.io/2017/03/27/Netty%E6%8C%87%E5%8D%97%E4%B8%AD%E6%96%87%E7%89%88/"/>
+    <id>https://mahui.github.io/2017/03/27/Netty指南中文版/</id>
+    <published>2017-03-27T07:06:43.000Z</published>
+    <updated>2017-03-27T15:33:52.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<p>based on <a href="%22https://github.com/netty/netty/wiki/User-guide-for-4.x%22">User guide for 4.x</a></p>
+</blockquote>
+<h1 id="序言-preface">序言 <a href="http://netty.io/wiki/user-guide-for-4.x.html#preface" target="_blank" rel="external">Preface</a></h1>
+<h2 id="问题-the-problem">问题 <a href="http://netty.io/wiki/user-guide-for-4.x.html#the-problem" target="_blank" rel="external">The Problem</a></h2>
+<p>如今我们使用通用的应用程序或者库来彼此通讯。比如，我们经常使用 HTTP 客户端库从远程服务器接收信息或者执行远程服务的调用。但无论如何，一个通用的协议或者它们的实现有时候可用性不是太好。这就是为什么有时候我们并不使用通用的 HTTP 协议来交换大数据、电子邮件信息以及金融数据和多人网络游戏数据这种近实时的数据。所需要的是为了一个专门的目的去实现一个高度优化的协议。比如，你可能需为了基于 AJAX 的聊天应用，媒体传输，或者大文件传输去实现一个优化的 HTTP 服务。你甚至可以为了你的需求去精确的定义并实现一个全新的协议。另外一个经常发生的情况是你必须去处理系统中遗留的专门协议去确保与旧系统的交互。这种情况下重要的是，我们如何能够快速的实现该协议，并且不会牺牲应用程序的稳定性和性能。</p>
+<h2 id="解决方案-the-solution">解决方案 <a href="http://netty.io/wiki/user-guide-for-4.x.html#the-solution" target="_blank" rel="external">The Solution</a></h2>
+<p><a href="http://netty.io" target="_blank" rel="external">Netty</a> 是一个提供了异步事件驱动 (asynchronous event-driven) 网络应用程序框架和工具的杰作，可以用来快速开发可维护的，高性能 · 高可用的服务端和客户端协议。</p>
+<p>从另一方面来讲，Netty 是一个可以快速开发网络程序如客户端和服务端协议的 NIO 客户端/服务端框架。它大大的简化了如 TCP 和 UDP 这类套接字服务的网络应用程序的开发并优化了其开发流程。</p>
+<p>“快速简单”并不意味着开发出的应用程序的可维护性变差或者遇到性能问题。 Netty 从大量的如 FTP、SMPT、HTTP 以及各种二进制文本传输协议的实现中获得经验，并精心设计。因此， Netty 成功的获得了可以快速开发，并且不妥协性能、稳定性以及灵活性的方法。</p>
+<p>一些用户用户或者发现过其他一些网络应用框架也声称有以上优势，可能会想问 Netty 和它们有何不同。答案是，设计哲学。 Netty 从一开始就设计得为你提供舒适的 API 及实现。这不是什么可感知的事务，但你会意识到这些设计哲学让你的生活变得更简单，就像你开始阅读这份指南，并且开始轻松使用 Netty 。</p>
+<h1 id="开始-getting-started">开始 <a href="http://netty.io/wiki/user-guide-for-4.x.html#getting-started" target="_blank" rel="external">Getting Started</a></h1>
+<p>本章指南围绕着 Netty 的核心结构，据一些简单的例子，让你轻松开始。本章结束后，你将可在 Netty 之上编写客户端和服务端。</p>
+<p>如果你学习东西的时候喜欢使用自上而下分析法，那么你也许可以从第二章，架构总览开始，然后回到这里。</p>
+<h2 id="开始之前-before-getting-started">开始之前 <a href="https://github.com/netty/netty/wiki/User-guide-for-4.x#before-getting-started" target="_blank" rel="external">Before Getting Started</a></h2>
+<p>要想运行本章中所引入的例子，需要两个最小的依赖：Netty 最新的稳定版 和 JDK 1.6 或者更新。Netty 最新的稳定版可以从 <a href="http://netty.io/downloads.html" target="_blank" rel="external">项目下载页面</a> 下载。可以从 JDK 供应商的网站下载正确版本的 JDK 。</p>
+<p>在你阅读的过程中，你可能对本章中引入的类有一些疑问。如果你想知道它们可以参考 API 文档。为了你的方便，文档中所有的类名都是引用的在线 API 文档。当然了，如果本文档中有任何错误信息，以及语法和打印中的错误，或者你有什么完善本文档的好的建议，可以<a href="http://netty.io/community.html" target="_blank" rel="external">联系Netty项目社区</a>。</p>
+<h2 id="写一个-discard-服务-writing-a-discard-server">写一个 Discard 服务 <a href="https://github.com/netty/netty/wiki/User-guide-for-4.x#writing-a-discard-server" target="_blank" rel="external">Writing a Discard Server</a></h2>
+<p>世界上最简单的协议是 <a href="http://tools.ietf.org/html/rfc863" target="_blank" rel="external"><code>DISCARD</code></a> ，而不是 &quot;Hello,World!&quot;。该协议丢弃任何收到的数据而不做任何回应。
+要实现 <code>DISCARD</code> 协议，你唯一要做的事情就是忽略任何收到的消息。让我们直接从一个 handler 的实现开始，handler 是 Netty 生成的用来处理 I/O 事件的。</p>
+<p><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> io.netty.example.discard;</div><div class="line"></div><div class="line"><span class="keyword">import</span> io.netty.buffer.ByteBuf;</div><div class="line"></div><div class="line"><span class="keyword">import</span> io.netty.channel.ChannelHandlerContext;</div><div class="line"><span class="keyword">import</span> io.netty.channel.ChannelInboundHandlerAdapter;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 处理一个服务端的 channel。</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DiscardServerHandler</span> <span class="keyword">extends</span> <span class="title">ChannelInboundHandlerAdapter</span> </span>&#123; <span class="comment">// (1)</span></div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead</span><span class="params">(ChannelHandlerContext ctx, Object msg)</span> </span>&#123; <span class="comment">// (2)</span></div><div class="line">        <span class="comment">// 默默的丢弃收到的数据。</span></div><div class="line">        ((ByteBuf) msg).release(); <span class="comment">// (3)</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exceptionCaught</span><span class="params">(ChannelHandlerContext ctx, Throwable cause)</span> </span>&#123; <span class="comment">// (4)</span></div><div class="line">        <span class="comment">// 当引发异常时关闭连接。</span></div><div class="line">        cause.printStackTrace();</div><div class="line">        ctx.close();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ol>
+<li>
+<p><code>DiscardServerHandler</code> 继承自 <a href="http://netty.io/4.0/api/io/netty/channel/ChannelInboundHandlerAdapter.html" target="_blank" rel="external"><code>ChannelInboundHandlerAdapter</code></a>，该类实现了 <a href="http://netty.io/4.0/api/io/netty/channel/ChannelInboundHandler.html" target="_blank" rel="external"><code>ChannelInboundHandler</code> </a>.<a href="http://netty.io/4.0/api/io/netty/channel/ChannelInboundHandler.html" target="_blank" rel="external"><code>ChannelInboundHandler</code></a> 接口，提供了多种事件处理方法，你可以重写这些方法。现在，你只需要继承 <a href="http://netty.io/4.0/api/io/netty/channel/ChannelInboundHandlerAdapter.html" target="_blank" rel="external"><code>ChannelInboundHandlerAdapter</code></a> ,而无需自己实现接口中的处理方法。</p>
+</li>
+<li>
+<p>我们重写了 <code>channelRead()</code> 方法。无论何时从客户端收到消息时，该方法被调用。在这个例子中，收到的消息类型是 <a href="http://netty.io/4.0/api/io/netty/buffer/ByteBuf.html" target="_blank" rel="external"><code>ByteBuf</code></a></p>
+</li>
+<li>
+<p>为了实现 <code>DISCARD</code> 协议，该处理器必须忽略收到的消息。  <a href="http://netty.io/4.0/api/io/netty/buffer/ByteBuf.html" target="_blank" rel="external"><code>ByteBuf</code></a> 是一个引用计数对象，所以必须显式的调用 <code>release()</code> 方法来释放资源。请谨记，任何传递到处理器引用计数对象，处理器都有责任将其释放掉。通常， <code>channelRead()</code> 方法的实现如下：
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead</span><span class="params">(ChannelHandlerContext ctx, Object msg)</span> </span>&#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="comment">// Do something with msg</span></div><div class="line">    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">        ReferenceCountUtil.release(msg);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</li>
+<li>
+<p>当 Netty 犹豫 I/O 错误或者处理器处理事件时抛出异常，导致 Throwable 对象出现时，<code>exceptionCaught()</code> 方法被调用。大多数情况下，补货到的异常应该被记录，与其相关的 channle 也应该在这儿被关闭，当然了，该方法的实现也会因你的不同异常处理方案而不同。比如，你也许想在关闭连接之前发送一个包含错误代码的响应消息。</p>
+</li>
+</ol>
+<p>目前来说一切都很好，我们实现了 <code>DISCARD</code> 服务的一般。现在剩下我们去在 <code>DiscardServerHandler</code> 中写一个 <code>main()</code> 方法来启动服务。</p>
+<p><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> io.netty.example.discard;</div><div class="line"></div><div class="line"><span class="keyword">import</span> io.netty.bootstrap.ServerBootstrap;</div><div class="line"></div><div class="line"><span class="keyword">import</span> io.netty.channel.ChannelFuture;</div><div class="line"><span class="keyword">import</span> io.netty.channel.ChannelInitializer;</div><div class="line"><span class="keyword">import</span> io.netty.channel.ChannelOption;</div><div class="line"><span class="keyword">import</span> io.netty.channel.EventLoopGroup;</div><div class="line"><span class="keyword">import</span> io.netty.channel.nio.NioEventLoopGroup;</div><div class="line"><span class="keyword">import</span> io.netty.channel.socket.SocketChannel;</div><div class="line"><span class="keyword">import</span> io.netty.channel.socket.nio.NioServerSocketChannel;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 丢弃任何进来的数据。</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DiscardServer</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> port;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DiscardServer</span><span class="params">(<span class="keyword">int</span> port)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.port = port;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        EventLoopGroup bossGroup = <span class="keyword">new</span> NioEventLoopGroup(); <span class="comment">// (1)</span></div><div class="line">        EventLoopGroup workerGroup = <span class="keyword">new</span> NioEventLoopGroup();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            ServerBootstrap b = <span class="keyword">new</span> ServerBootstrap(); <span class="comment">// (2)</span></div><div class="line">            b.group(bossGroup, workerGroup)</div><div class="line">             .channel(NioServerSocketChannel.class) <span class="comment">// (3)</span></div><div class="line">             .childHandler(<span class="keyword">new</span> ChannelInitializer&lt;SocketChannel&gt;() &#123; <span class="comment">// (4)</span></div><div class="line">                 <span class="meta">@Override</span></div><div class="line">                 <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(SocketChannel ch)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">                     ch.pipeline().addLast(<span class="keyword">new</span> DiscardServerHandler());</div><div class="line">                 &#125;</div><div class="line">             &#125;)</div><div class="line">             .option(ChannelOption.SO_BACKLOG, <span class="number">128</span>)          <span class="comment">// (5)</span></div><div class="line">             .childOption(ChannelOption.SO_KEEPALIVE, <span class="keyword">true</span>); <span class="comment">// (6)</span></div><div class="line"></div><div class="line">            <span class="comment">// 绑定端口并且开始服务接收进来的连接。</span></div><div class="line">            ChannelFuture f = b.bind(port).sync(); <span class="comment">// (7)</span></div><div class="line"></div><div class="line">            <span class="comment">// 等待 server socket 关闭。</span></div><div class="line">            <span class="comment">// 在这个例子中，这不会发生，但你可以这样优雅的关闭你的服务。</span></div><div class="line">            f.channel().closeFuture().sync();</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            workerGroup.shutdownGracefully();</div><div class="line">            bossGroup.shutdownGracefully();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        <span class="keyword">int</span> port;</div><div class="line">        <span class="keyword">if</span> (args.length &gt; <span class="number">0</span>) &#123;</div><div class="line">            port = Integer.parseInt(args[<span class="number">0</span>]);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            port = <span class="number">8080</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">new</span> DiscardServer(port).run();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ol>
+<li>
+<p><a href="http://netty.io/4.0/api/io/netty/channel/nio/NioEventLoopGroup.html" target="_blank" rel="external"><code>NioEventLoopGroup</code></a> 是一个用来处理 I/O 操作的多线程事件循环器。 Netty 为不同类型传输提供了各种各样的 <a href="http://netty.io/4.0/api/io/netty/channel/EventLoopGroup.html" target="_blank" rel="external"><code>EventLoopGroup</code></a> 的实现。这个例子我们实现了一个服务端的应用，声明了两个 <a href="http://netty.io/4.0/api/io/netty/channel/nio/NioEventLoopGroup.html" target="_blank" rel="external"><code>NioEventLoopGroup</code></a> 实例。第一个，通常称为 &quot;boss&quot;,用来接收进来的连接。第二个，通常称为 &quot;worker&quot;, 用来处理接收到连接，一旦 boss 接收到连接，就将其注册到 worker 上。使用多少个线程，如何将其映射到已经创建好的 <a href="http://netty.io/4.0/api/io/netty/channel/Channel.html" target="_blank" rel="external"><code>channel</code></a>S 依赖于 <a href="http://netty.io/4.0/api/io/netty/channel/EventLoopGroup.html" target="_blank" rel="external"><code>EventLoopGroup</code></a> 的实现，也可以通过构造方法进行配置。</p>
+</li>
+<li>
+<p><a href="http://netty.io/4.0/api/io/netty/bootstrap/ServerBootstrap.html" target="_blank" rel="external"><code>ServerBootstrap</code></a> 是一个建立 server 的辅助类。你也可以通过 <a href="http://netty.io/4.0/api/io/netty/channel/Channel.html" target="_blank" rel="external"><code>Channel</code></a> 直接建立一个 server。但请注意，这是一个非常冗长的过程，很多时候，你并不需要这么做。</p>
+</li>
+<li>
+<p>在这儿，我们指定使用 <a href="http://netty.io/4.0/api/io/netty/channel/socket/nio/NioServerSocketChannel.html" target="_blank" rel="external"><code>NioServerSocketChannel</code></a> 类来实例化一个新的 <a href="http://netty.io/4.0/api/io/netty/channel/Channel.html" target="_blank" rel="external"><code>Channel</code></a> 来接收进来的连接。</p>
+</li>
+<li>
+<p>在这儿指定的处理器通常由新接收的 Channel 进行评估。<a href="http://netty.io/4.0/api/io/netty/channel/ChannelInitializer.html" target="_blank" rel="external"><code>ChannelInitializer</code></a> 是一个特殊的处理器，用来帮助用户配置一个新的 <a href="http://netty.io/4.0/api/io/netty/channel/Channel.html" target="_blank" rel="external"><code>Channel</code></a>。很可能你会想通过添加处理器,如 <code>DiscardServerHandler</code> ,来配置新 <a href="http://netty.io/4.0/api/io/netty/channel/Channel.html" target="_blank" rel="external"><code>Channel</code></a> 的 <a href="http://netty.io/4.0/api/io/netty/channel/ChannelPipeline.html" target="_blank" rel="external"><code>ChannelPipeline</code></a> ,用来实现你的网络应用。随着应用变得复杂，你会往管道添加更多的处理器，最终你可能会把这个匿名类提取为一个单独的类。</p>
+</li>
+<li>
+<p>你可以设置指定 Channel 实现的特定参数。我们在写一个 TCP/IP 服务，所以我们可以设置一些 socket 的选项，比如 <code>tcpNoDelay</code> 和 <code>keepAlive</code> 。请参照 <a href="http://netty.io/4.0/api/io/netty/channel/ChannelOption.html" target="_blank" rel="external"><code>ChannelOption</code></a> API 文档以及特定的 <a href="http://netty.io/4.0/api/io/netty/channel/ChannelConfig.html" target="_blank" rel="external"><code>ChannelConfig</code></a> 实现，以获得有关 <code>ChannelOptionS</code> 支持的概述。</p>
+</li>
+<li>
+<p>你有注意到 <code>option()</code> 和 <code>childOption</code> 方法了吗？ <code>option()</code> 是为 <a href="http://netty.io/4.0/api/io/netty/channel/socket/nio/NioServerSocketChannel.html" target="_blank" rel="external"><code>NioServerSocketChannel</code></a> 用来接收进来的连接。 <code>childOption()</code> 是为被父通道 <a href="http://netty.io/4.0/api/io/netty/channel/ServerChannel.html" target="_blank" rel="external"><code>ServerChannel</code></a> 接收到的 <code>ChannelS</code> ，在本例中指的是 <a href="http://netty.io/4.0/api/io/netty/channel/socket/nio/NioServerSocketChannel.html" target="_blank" rel="external"><code>NioServerSocketChannel</code></a>。</p>
+</li>
+<li>
+<p>我们现在已经准备好了。剩下的就是绑定端口和启动服务了。在这儿，我们绑定了机器所有网卡的 <code>8080</code> 端口。你现在可以调用多次 <code>bind()</code> 方法（用不同的绑定地址）。</p>
+</li>
+</ol>
+<p>恭喜你！你已经基于 Netty 完成里你的第一个服务端程序。</p>
+<p><em>&lt;未完待续&gt;</em></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;based on &lt;a href=&quot;%22https://github.com/netty/netty/wiki/User-guide-for-4.x%22&quot;&gt;User guide for 4.x&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1
+    
+    </summary>
+    
+      <category term="文档" scheme="https://mahui.github.io/categories/%E6%96%87%E6%A1%A3/"/>
+    
+    
+      <category term="Netty" scheme="https://mahui.github.io/tags/Netty/"/>
+    
+      <category term="Java" scheme="https://mahui.github.io/tags/Java/"/>
+    
+      <category term="翻译" scheme="https://mahui.github.io/tags/%E7%BF%BB%E8%AF%91/"/>
+    
+  </entry>
   
   <entry>
     <title>为什么要造轮子</title>
@@ -69,28 +161,28 @@
     <content type="html"><![CDATA[<blockquote>
 <p>有很多事情要做，把他们列下来</p>
 </blockquote>
-<h1>side project</h1>
+<h1 id="side-project">side project</h1>
 <ul>
 <li>ur-orm</li>
 </ul>
-<h1>学习</h1>
+<h1 id="学习">学习</h1>
 <ul>
 <li>vue.js</li>
 <li>netty</li>
 <li>英语</li>
 </ul>
-<h1>读书</h1>
+<h1 id="读书">读书</h1>
 <ul>
 <li>三体</li>
 <li>java虚拟机规范</li>
 <li>响应式web设计</li>
 </ul>
-<h1>产出</h1>
+<h1 id="产出">产出</h1>
 <ul>
 <li>git练习代码提交</li>
 <li>学习笔记</li>
 </ul>
-<h1>为什么要学前端</h1>
+<h1 id="为什么要学前端">为什么要学前端</h1>
 <p>作为一个一直在写后段代码的人，有着一颗产品的❤️，想要把自己的idea展示出来可不是看着 terminal 中应用启动成功了就行了的。</p>
 <blockquote>
 <p>时间过的很快，2017年的1/6又没了</p>
@@ -102,14 +194,12 @@
       &lt;blockquote&gt;
 &lt;p&gt;有很多事情要做，把他们列下来&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;h1&gt;side project&lt;/h1&gt;
+&lt;h1 id=&quot;side-project&quot;&gt;side project&lt;/h1&gt;
 &lt;ul&gt;
 &lt;li&gt;ur-orm&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h1&gt;学习&lt;/h1&gt;
+&lt;h1 id=&quot;学习&quot;&gt;学习&lt;/h1&gt;
 &lt;ul&gt;
-&lt;li&gt;vue.js&lt;/li&gt;
-&lt;li&gt;netty
     
     </summary>
     
@@ -127,12 +217,12 @@
     <published>2017-03-01T08:10:54.000Z</published>
     <updated>2017-03-02T17:34:22.000Z</updated>
     
-    <content type="html"><![CDATA[<h1>主题选择</h1>
+    <content type="html"><![CDATA[<h1 id="主题选择">主题选择</h1>
 <ul>
 <li><a href="https://github.com/pinggod/hexo-theme-apollo" title="apollo" target="_blank" rel="external">hexo-theme-apollo</a></li>
 <li>网上找了个水滴的图标，好看，一点点寓意。</li>
 </ul>
-<h1>多客户端写文章的问题</h1>
+<h1 id="多客户端写文章的问题">多客户端写文章的问题</h1>
 <p><code>hexo d</code> 执行后 <em>hexo</em> 将 <code>hexo g</code> 生成的 <em>public</em> 文件夹下的静态文件部署到目标服务器，其它 <em>hexo</em> 环境相关的内容则还在本机上，这样势必导致之前辛苦装的一系列插件，主题之类的东西没有办法同步到其它机器上，更换电脑是件麻烦事。</p>
 <p>暂且想到集中解决方案</p>
 <ul>
@@ -150,9 +240,9 @@
     
     <summary type="html">
     
-      &lt;h1&gt;主题选择&lt;/h1&gt;
+      &lt;h1 id=&quot;主题选择&quot;&gt;主题选择&lt;/h1&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/pinggod/hexo-theme-apollo&quot; title=&quot;apollo&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;hexo-theme-apoll
+&lt;li&gt;&lt;a href=&quot;https://github.com/pinggod/hexo-theme-apollo&quot; title=&quot;apollo&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;hexo-t
     
     </summary>
     

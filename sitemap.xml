@@ -2,6 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://mahui.github.io/2017/03/27/Netty%E6%8C%87%E5%8D%97%E4%B8%AD%E6%96%87%E7%89%88/</loc>
+    
+    <lastmod>2017-03-27T15:33:52.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mahui.github.io/categories/index.html</loc>
+    
+    <lastmod>2017-03-27T14:40:05.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://mahui.github.io/tags/index.html</loc>
+    
+    <lastmod>2017-03-27T14:38:54.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://mahui.github.io/2017/03/06/%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E9%80%A0%E8%BD%AE%E5%AD%90/</loc>
     
     <lastmod>2017-03-06T14:55:01.000Z</lastmod>

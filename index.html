@@ -1,1 +1,1478 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 在这儿写字</title><meta name="description" content="A Blog Powered By Hexo"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.png"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mahui.github.io/atom.xml" title="在这儿写字"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link active">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="http://weibo.com/u/1736948104" target="_blank" class="nav-list-link">WEIBO</a></li><li class="nav-list-item"><a href="https://github.com/mahui" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><main class="container"><ul class="home post-list"><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a href="/2017/03/06/为什么要造轮子/" class="post-title-link">为什么要造轮子</a></h2><div class="post-info">2017年3月6日</div><div class="post-content"></div><a href="/2017/03/06/为什么要造轮子/" class="read-more">...more</a></article></li><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a href="/2017/03/03/要做的事情/" class="post-title-link">要做的事情</a></h2><div class="post-info">2017年3月3日</div><div class="post-content"></div><a href="/2017/03/03/要做的事情/" class="read-more">...more</a></article></li><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a href="/2017/03/01/Hexo部署笔记/" class="post-title-link">Hexo部署笔记</a></h2><div class="post-info">2017年3月1日</div><div class="post-content"></div><a href="/2017/03/01/Hexo部署笔记/" class="read-more">...more</a></article></li></ul></main><footer><div class="paginator"></div><div class="copyright"><p>© 2016 - 2017 <a href="https://mahui.github.io">马荟</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-79938831-1",'auto');ga('send','pageview');</script></body></html>
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="一个涂鸦板" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="一个涂鸦板">
+<meta property="og:url" content="https://mahui.github.io/index.html">
+<meta property="og:site_name" content="一个涂鸦板">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一个涂鸦板">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"没发现任何匹配项: ${query}","hits_stats":"在 ${time} ms 内搜索到 ${hits} 条结果"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://mahui.github.io/"/>
+
+
+
+
+
+  <title> 一个涂鸦板 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-79938831-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left 
+   page-home 
+ ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">一个涂鸦板</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://mahui.github.io/2017/03/27/Netty指南中文版/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="马荟">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://ww2.sinaimg.cn/small/6787b988gw1eeoz2jfnv6j20m80biwfp.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一个涂鸦板">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/03/27/Netty指南中文版/" itemprop="url">
+                  Netty用户指南4.x
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-27T15:06:43+08:00">
+                2017-03-27
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-03-27T23:33:52+08:00">
+                2017-03-27
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/文档/" itemprop="url" rel="index">
+                    <span itemprop="name">文档</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>based on <a href="%22https://github.com/netty/netty/wiki/User-guide-for-4.x%22">User guide for 4.x</a></p>
+</blockquote>
+<h1 id="序言-preface">序言 <a href="http://netty.io/wiki/user-guide-for-4.x.html#preface" target="_blank" rel="external">Preface</a></h1>
+<h2 id="问题-the-problem">问题 <a href="http://netty.io/wiki/user-guide-for-4.x.html#the-problem" target="_blank" rel="external">The Problem</a></h2>
+<p>如今我们使用通用的应用程序或者库来彼此通讯。比如，我们经常使用 HTTP 客户端库从远程服务器接收信息或者执行远程服务的调用。但无论如何，一个通用的协议或者它们的实现有时候可用性不是太好。这就是为什么有时候我们并不使用通用的 HTTP 协议来交换大数据、电子邮件信息以及金融数据和多人网络游戏数据这种近实时的数据。所需要的是为了一个专门的目的去实现一个高度优化的协议。比如，你可能需为了基于 AJAX 的聊天应用，媒体传输，或者大文件传输去实现一个优化的 HTTP 服务。你甚至可以为了你的需求去精确的定义并实现一个全新的协议。另外一个经常发生的情况是你必须去处理系统中遗留的专门协议去确保与旧系统的交互。这种情况下重要的是，我们如何能够快速的实现该协议，并且不会牺牲应用程序的稳定性和性能。</p>
+<h2 id="解决方案-the-solution">解决方案 <a href="http://netty.io/wiki/user-guide-for-4.x.html#the-solution" target="_blank" rel="external">The Solution</a></h2>
+<p><a href="http://netty.io" target="_blank" rel="external">Netty</a> 是一个提供了异步事件驱动 (asynchronous event-driven) 网络应用程序框架和工具的杰作，可以用来快速开发可维护的，高性能 · 高可用的服务端和客户端协议。</p>
+<p>从另一方面来讲，Netty 是一个可以快速开发网络程序如客户端和服务端协议的 NIO 客户端/服务端框架。它大大的简化了如 TCP 和 UDP 这类套接字服务的网络应用程序的开发并优化了其开发流程。</p>
+<p>“快速简单”并不意味着开发出的应用程序的可维护性变差或者遇到性能问题。 Netty 从大量的如 FTP、SMPT、HTTP 以及各种二进制文本传输协议的实现中获得经验，并精心设计。因此， Netty 成功的获得了可以快速开发，并且不妥协性能、稳定性以及灵活性的方法。</p>
+<p>一些用户用户或者发现过其他一些网络应用框架也声称有以上优势，可能会想问 Netty 和它们有何不同。答案是，设计哲学。 Netty 从一开始就设计得为你提供舒适的 API 及实现。这不是什么可感知的事务，但你会意识到这些设计哲学让你的生活变得更简单，就像你开始阅读这份指南，并且开始轻松使用 Netty 。</p>
+<h1 id="开始-getting-started">开始 <a href="http://netty.io/wiki/user-guide-for-4.x.html#getting-started" target="_blank" rel="external">Getting Started</a></h1>
+<p>本章指南围绕着 Netty 的核心结构，据一些简单的例子，让你轻松开始。本章结束后，你将可在 Netty 之上编写客户端和服务端。</p>
+<p>如果你学习东西的时候喜欢使用自上而下分析法，那么你也许可以从第二章，架构总览开始，然后回到这里。</p>
+<h2 id="开始之前-before-getting-started">开始之前 <a href="https://github.com/netty/netty/wiki/User-guide-for-4.x#before-getting-started" target="_blank" rel="external">Before Getting Started</a></h2>
+<p>要想运行本章中所引入的例子，需要两个最小的依赖：Netty 最新的稳定版 和 JDK 1.6 或者更新。Netty 最新的稳定版可以从 <a href="http://netty.io/downloads.html" target="_blank" rel="external">项目下载页面</a> 下载。可以从 JDK 供应商的网站下载正确版本的 JDK 。</p>
+<p>在你阅读的过程中，你可能对本章中引入的类有一些疑问。如果你想知道它们可以参考 API 文档。为了你的方便，文档中所有的类名都是引用的在线 API 文档。当然了，如果本文档中有任何错误信息，以及语法和打印中的错误，或者你有什么完善本文档的好的建议，可以<a href="http://netty.io/community.html" target="_blank" rel="external">联系Netty项目社区</a>。</p>
+<h2 id="写一个-discard-服务-writing-a-discard-server">写一个 Discard 服务 <a href="https://github.com/netty/netty/wiki/User-guide-for-4.x#writing-a-discard-server" target="_blank" rel="external">Writing a Discard Server</a></h2>
+<p>世界上最简单的协议是 <a href="http://tools.ietf.org/html/rfc863" target="_blank" rel="external"><code>DISCARD</code></a> ，而不是 &quot;Hello,World!&quot;。该协议丢弃任何收到的数据而不做任何回应。
+要实现 <code>DISCARD</code> 协议，你唯一要做的事情就是忽略任何收到的消息。让我们直接从一个 handler 的实现开始，handler 是 Netty 生成的用来处理 I/O 事件的。</p>
+<p><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> io.netty.example.discard;</div><div class="line"></div><div class="line"><span class="keyword">import</span> io.netty.buffer.ByteBuf;</div><div class="line"></div><div class="line"><span class="keyword">import</span> io.netty.channel.ChannelHandlerContext;</div><div class="line"><span class="keyword">import</span> io.netty.channel.ChannelInboundHandlerAdapter;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 处理一个服务端的 channel。</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DiscardServerHandler</span> <span class="keyword">extends</span> <span class="title">ChannelInboundHandlerAdapter</span> </span>&#123; <span class="comment">// (1)</span></div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead</span><span class="params">(ChannelHandlerContext ctx, Object msg)</span> </span>&#123; <span class="comment">// (2)</span></div><div class="line">        <span class="comment">// 默默的丢弃收到的数据。</span></div><div class="line">        ((ByteBuf) msg).release(); <span class="comment">// (3)</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exceptionCaught</span><span class="params">(ChannelHandlerContext ctx, Throwable cause)</span> </span>&#123; <span class="comment">// (4)</span></div><div class="line">        <span class="comment">// 当引发异常时关闭连接。</span></div><div class="line">        cause.printStackTrace();</div><div class="line">        ctx.close();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ol>
+<li>
+<p><code>DiscardServerHandler</code> 继承自 <a href="http://netty.io/4.0/api/io/netty/channel/ChannelInboundHandlerAdapter.html" target="_blank" rel="external"><code>ChannelInboundHandlerAdapter</code></a>，该类实现了 <a href="http://netty.io/4.0/api/io/netty/channel/ChannelInboundHandler.html" target="_blank" rel="external"><code>ChannelInboundHandler</code> </a>.<a href="http://netty.io/4.0/api/io/netty/channel/ChannelInboundHandler.html" target="_blank" rel="external"><code>ChannelInboundHandler</code></a> 接口，提供了多种事件处理方法，你可以重写这些方法。现在，你只需要继承 <a href="http://netty.io/4.0/api/io/netty/channel/ChannelInboundHandlerAdapter.html" target="_blank" rel="external"><code>ChannelInboundHandlerAdapter</code></a> ,而无需自己实现接口中的处理方法。</p>
+</li>
+<li>
+<p>我们重写了 <code>channelRead()</code> 方法。无论何时从客户端收到消息时，该方法被调用。在这个例子中，收到的消息类型是 <a href="http://netty.io/4.0/api/io/netty/buffer/ByteBuf.html" target="_blank" rel="external"><code>ByteBuf</code></a></p>
+</li>
+<li>
+<p>为了实现 <code>DISCARD</code> 协议，该处理器必须忽略收到的消息。  <a href="http://netty.io/4.0/api/io/netty/buffer/ByteBuf.html" target="_blank" rel="external"><code>ByteBuf</code></a> 是一个引用计数对象，所以必须显式的调用 <code>release()</code> 方法来释放资源。请谨记，任何传递到处理器引用计数对象，处理器都有责任将其释放掉。通常， <code>channelRead()</code> 方法的实现如下：
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead</span><span class="params">(ChannelHandlerContext ctx, Object msg)</span> </span>&#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="comment">// Do something with msg</span></div><div class="line">    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">        ReferenceCountUtil.release(msg);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</li>
+<li>
+<p>当 Netty 犹豫 I/O 错误或者处理器处理事件时抛出异常，导致 Throwable 对象出现时，<code>exceptionCaught()</code> 方法被调用。大多数情况下，补货到的异常应该被记录，与其相关的 channle 也应该在这儿被关闭，当然了，该方法的实现也会因你的不同异常处理方案而不同。比如，你也许想在关闭连接之前发送一个包含错误代码的响应消息。</p>
+</li>
+</ol>
+<p>目前来说一切都很好，我们实现了 <code>DISCARD</code> 服务的一般。现在剩下我们去在 <code>DiscardServerHandler</code> 中写一个 <code>main()</code> 方法来启动服务。</p>
+<p><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> io.netty.example.discard;</div><div class="line"></div><div class="line"><span class="keyword">import</span> io.netty.bootstrap.ServerBootstrap;</div><div class="line"></div><div class="line"><span class="keyword">import</span> io.netty.channel.ChannelFuture;</div><div class="line"><span class="keyword">import</span> io.netty.channel.ChannelInitializer;</div><div class="line"><span class="keyword">import</span> io.netty.channel.ChannelOption;</div><div class="line"><span class="keyword">import</span> io.netty.channel.EventLoopGroup;</div><div class="line"><span class="keyword">import</span> io.netty.channel.nio.NioEventLoopGroup;</div><div class="line"><span class="keyword">import</span> io.netty.channel.socket.SocketChannel;</div><div class="line"><span class="keyword">import</span> io.netty.channel.socket.nio.NioServerSocketChannel;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 丢弃任何进来的数据。</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DiscardServer</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> port;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DiscardServer</span><span class="params">(<span class="keyword">int</span> port)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.port = port;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        EventLoopGroup bossGroup = <span class="keyword">new</span> NioEventLoopGroup(); <span class="comment">// (1)</span></div><div class="line">        EventLoopGroup workerGroup = <span class="keyword">new</span> NioEventLoopGroup();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            ServerBootstrap b = <span class="keyword">new</span> ServerBootstrap(); <span class="comment">// (2)</span></div><div class="line">            b.group(bossGroup, workerGroup)</div><div class="line">             .channel(NioServerSocketChannel.class) <span class="comment">// (3)</span></div><div class="line">             .childHandler(<span class="keyword">new</span> ChannelInitializer&lt;SocketChannel&gt;() &#123; <span class="comment">// (4)</span></div><div class="line">                 <span class="meta">@Override</span></div><div class="line">                 <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(SocketChannel ch)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">                     ch.pipeline().addLast(<span class="keyword">new</span> DiscardServerHandler());</div><div class="line">                 &#125;</div><div class="line">             &#125;)</div><div class="line">             .option(ChannelOption.SO_BACKLOG, <span class="number">128</span>)          <span class="comment">// (5)</span></div><div class="line">             .childOption(ChannelOption.SO_KEEPALIVE, <span class="keyword">true</span>); <span class="comment">// (6)</span></div><div class="line"></div><div class="line">            <span class="comment">// 绑定端口并且开始服务接收进来的连接。</span></div><div class="line">            ChannelFuture f = b.bind(port).sync(); <span class="comment">// (7)</span></div><div class="line"></div><div class="line">            <span class="comment">// 等待 server socket 关闭。</span></div><div class="line">            <span class="comment">// 在这个例子中，这不会发生，但你可以这样优雅的关闭你的服务。</span></div><div class="line">            f.channel().closeFuture().sync();</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            workerGroup.shutdownGracefully();</div><div class="line">            bossGroup.shutdownGracefully();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        <span class="keyword">int</span> port;</div><div class="line">        <span class="keyword">if</span> (args.length &gt; <span class="number">0</span>) &#123;</div><div class="line">            port = Integer.parseInt(args[<span class="number">0</span>]);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            port = <span class="number">8080</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">new</span> DiscardServer(port).run();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ol>
+<li>
+<p><a href="http://netty.io/4.0/api/io/netty/channel/nio/NioEventLoopGroup.html" target="_blank" rel="external"><code>NioEventLoopGroup</code></a> 是一个用来处理 I/O 操作的多线程事件循环器。 Netty 为不同类型传输提供了各种各样的 <a href="http://netty.io/4.0/api/io/netty/channel/EventLoopGroup.html" target="_blank" rel="external"><code>EventLoopGroup</code></a> 的实现。这个例子我们实现了一个服务端的应用，声明了两个 <a href="http://netty.io/4.0/api/io/netty/channel/nio/NioEventLoopGroup.html" target="_blank" rel="external"><code>NioEventLoopGroup</code></a> 实例。第一个，通常称为 &quot;boss&quot;,用来接收进来的连接。第二个，通常称为 &quot;worker&quot;, 用来处理接收到连接，一旦 boss 接收到连接，就将其注册到 worker 上。使用多少个线程，如何将其映射到已经创建好的 <a href="http://netty.io/4.0/api/io/netty/channel/Channel.html" target="_blank" rel="external"><code>channel</code></a>S 依赖于 <a href="http://netty.io/4.0/api/io/netty/channel/EventLoopGroup.html" target="_blank" rel="external"><code>EventLoopGroup</code></a> 的实现，也可以通过构造方法进行配置。</p>
+</li>
+<li>
+<p><a href="http://netty.io/4.0/api/io/netty/bootstrap/ServerBootstrap.html" target="_blank" rel="external"><code>ServerBootstrap</code></a> 是一个建立 server 的辅助类。你也可以通过 <a href="http://netty.io/4.0/api/io/netty/channel/Channel.html" target="_blank" rel="external"><code>Channel</code></a> 直接建立一个 server。但请注意，这是一个非常冗长的过程，很多时候，你并不需要这么做。</p>
+</li>
+<li>
+<p>在这儿，我们指定使用 <a href="http://netty.io/4.0/api/io/netty/channel/socket/nio/NioServerSocketChannel.html" target="_blank" rel="external"><code>NioServerSocketChannel</code></a> 类来实例化一个新的 <a href="http://netty.io/4.0/api/io/netty/channel/Channel.html" target="_blank" rel="external"><code>Channel</code></a> 来接收进来的连接。</p>
+</li>
+<li>
+<p>在这儿指定的处理器通常由新接收的 Channel 进行评估。<a href="http://netty.io/4.0/api/io/netty/channel/ChannelInitializer.html" target="_blank" rel="external"><code>ChannelInitializer</code></a> 是一个特殊的处理器，用来帮助用户配置一个新的 <a href="http://netty.io/4.0/api/io/netty/channel/Channel.html" target="_blank" rel="external"><code>Channel</code></a>。很可能你会想通过添加处理器,如 <code>DiscardServerHandler</code> ,来配置新 <a href="http://netty.io/4.0/api/io/netty/channel/Channel.html" target="_blank" rel="external"><code>Channel</code></a> 的 <a href="http://netty.io/4.0/api/io/netty/channel/ChannelPipeline.html" target="_blank" rel="external"><code>ChannelPipeline</code></a> ,用来实现你的网络应用。随着应用变得复杂，你会往管道添加更多的处理器，最终你可能会把这个匿名类提取为一个单独的类。</p>
+</li>
+<li>
+<p>你可以设置指定 Channel 实现的特定参数。我们在写一个 TCP/IP 服务，所以我们可以设置一些 socket 的选项，比如 <code>tcpNoDelay</code> 和 <code>keepAlive</code> 。请参照 <a href="http://netty.io/4.0/api/io/netty/channel/ChannelOption.html" target="_blank" rel="external"><code>ChannelOption</code></a> API 文档以及特定的 <a href="http://netty.io/4.0/api/io/netty/channel/ChannelConfig.html" target="_blank" rel="external"><code>ChannelConfig</code></a> 实现，以获得有关 <code>ChannelOptionS</code> 支持的概述。</p>
+</li>
+<li>
+<p>你有注意到 <code>option()</code> 和 <code>childOption</code> 方法了吗？ <code>option()</code> 是为 <a href="http://netty.io/4.0/api/io/netty/channel/socket/nio/NioServerSocketChannel.html" target="_blank" rel="external"><code>NioServerSocketChannel</code></a> 用来接收进来的连接。 <code>childOption()</code> 是为被父通道 <a href="http://netty.io/4.0/api/io/netty/channel/ServerChannel.html" target="_blank" rel="external"><code>ServerChannel</code></a> 接收到的 <code>ChannelS</code> ，在本例中指的是 <a href="http://netty.io/4.0/api/io/netty/channel/socket/nio/NioServerSocketChannel.html" target="_blank" rel="external"><code>NioServerSocketChannel</code></a>。</p>
+</li>
+<li>
+<p>我们现在已经准备好了。剩下的就是绑定端口和启动服务了。在这儿，我们绑定了机器所有网卡的 <code>8080</code> 端口。你现在可以调用多次 <code>bind()</code> 方法（用不同的绑定地址）。</p>
+</li>
+</ol>
+<p>恭喜你！你已经基于 Netty 完成里你的第一个服务端程序。</p>
+<p><em>&lt;未完待续&gt;</em></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://mahui.github.io/2017/03/06/为什么要造轮子/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="马荟">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://ww2.sinaimg.cn/small/6787b988gw1eeoz2jfnv6j20m80biwfp.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一个涂鸦板">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/03/06/为什么要造轮子/" itemprop="url">
+                  为什么要造轮子
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-06T22:28:36+08:00">
+                2017-03-06
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-03-06T22:55:01+08:00">
+                2017-03-06
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/日记/" itemprop="url" rel="index">
+                    <span itemprop="name">日记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>当我在 oschina.net 上以 java orm 作为关键词进行搜索的时候，共找到529条结果。那么我为什么还是要写 ur-orm 呢？</p>
+</blockquote>
+<ul>
+<li>与DB交互的时候，只想调用一个方法就行了</li>
+<li>虽然看上去不够高大上，但在代码里写sql感觉就是舒服呀😌</li>
+<li>与查询的时候返回个对象用起来遍历，当然了，这也是 ORM 框架最起码要实现的</li>
+<li>轻量级，轻量级，还是轻量级。在大家都在说轻量级的时候，要做到真正但轻量级，换ORM的时候，只会觉得当前的代码不够用，而不是发现当前的一堆配置，代码是多余的，对另一个框架来说。当然了，这有点儿偏激。</li>
+<li>重要的是，要对味儿。
+<ul>
+<li>用了好多年的 MyBatis 了，至今还是觉得这是个好的框架，但实在不想在项目开始的时候先来一拖它的配置，不管是 resultMap 还是其它。</li>
+<li>JPA 让 Java 开发有了点儿敏捷的意思了，但有时候封装的太深，用起来让人不知所措。</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>当然了，这个轮子，说不定哪天也会变得让人又爱又恨。😄</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://mahui.github.io/2017/03/03/要做的事情/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="马荟">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://ww2.sinaimg.cn/small/6787b988gw1eeoz2jfnv6j20m80biwfp.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一个涂鸦板">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/03/03/要做的事情/" itemprop="url">
+                  要做的事情
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-03T01:20:16+08:00">
+                2017-03-03
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-03-06T22:26:39+08:00">
+                2017-03-06
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/日记/" itemprop="url" rel="index">
+                    <span itemprop="name">日记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>有很多事情要做，把他们列下来</p>
+</blockquote>
+<h1 id="side-project">side project</h1>
+<ul>
+<li>ur-orm</li>
+</ul>
+<h1 id="学习">学习</h1>
+<ul>
+<li>vue.js</li>
+<li>netty</li>
+<li>英语</li>
+</ul>
+<h1 id="读书">读书</h1>
+<ul>
+<li>三体</li>
+<li>java虚拟机规范</li>
+<li>响应式web设计</li>
+</ul>
+<h1 id="产出">产出</h1>
+<ul>
+<li>git练习代码提交</li>
+<li>学习笔记</li>
+</ul>
+<h1 id="为什么要学前端">为什么要学前端</h1>
+<p>作为一个一直在写后段代码的人，有着一颗产品的❤️，想要把自己的idea展示出来可不是看着 terminal 中应用启动成功了就行了的。</p>
+<blockquote>
+<p>时间过的很快，2017年的1/6又没了</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://mahui.github.io/2017/03/01/Hexo部署笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="马荟">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://ww2.sinaimg.cn/small/6787b988gw1eeoz2jfnv6j20m80biwfp.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一个涂鸦板">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/03/01/Hexo部署笔记/" itemprop="url">
+                  Hexo部署笔记
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-01T16:10:54+08:00">
+                2017-03-01
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-03-03T01:34:22+08:00">
+                2017-03-03
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="主题选择">主题选择</h1>
+<ul>
+<li><a href="https://github.com/pinggod/hexo-theme-apollo" title="apollo" target="_blank" rel="external">hexo-theme-apollo</a></li>
+<li>网上找了个水滴的图标，好看，一点点寓意。</li>
+</ul>
+<h1 id="多客户端写文章的问题">多客户端写文章的问题</h1>
+<p><code>hexo d</code> 执行后 <em>hexo</em> 将 <code>hexo g</code> 生成的 <em>public</em> 文件夹下的静态文件部署到目标服务器，其它 <em>hexo</em> 环境相关的内容则还在本机上，这样势必导致之前辛苦装的一系列插件，主题之类的东西没有办法同步到其它机器上，更换电脑是件麻烦事。</p>
+<p>暂且想到集中解决方案</p>
+<ul>
+<li>使用 dropbox，OneDriver 之类的文件同步服务同步源文件</li>
+<li>另外建一个repo同步源文件</li>
+<li>网络上还有一种将源文件提交到新分支的做法</li>
+</ul>
+<p>看了<code>hexo init</code> 后的 <em>blog_dir</em> ,显然 <em>hexo</em> 已经考虑到这方面的问题，支持将源文件提交到 <em>git</em> 仓库中，因为 <em>.gitignore</em> 已经初始化好了。</p>
+<p>作为一个稍微有点儿强迫症的狮子座，决定采用新建分支的方法</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">cd $blog_dir</div><div class="line">git init</div><div class="line">git add *</div><div class="line">git checkout -b $branch_name</div><div class="line">git remote add origin git@github.com:xxxx/xxxx.github.io.git</div><div class="line">git push origin $branch_name:$branch_name</div></pre></td></tr></table></figure></p>
+<p>需要注意的是，<em>_config.yml</em> 中 deploy 节点不要暴露敏感信息。
+在新的客户端，只需要将代码clone下来，<code>checkout</code>到相应分支，<code>npm install -g hexo-cli</code>,<code>npm install</code> 之后 <code>new</code>, <code>generate</code>, <code>deploy</code> 即可</p>
+<p>关于源码的维护，可以将当前 repo 的 default branch 设置为源码的分支，以方便后续维护。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+  </section>
+
+  
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://ww2.sinaimg.cn/small/6787b988gw1eeoz2jfnv6j20m80biwfp.jpg"
+               alt="马荟" />
+          <p class="site-author-name" itemprop="name">马荟</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/mahui" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/mahuimay" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/1736948104" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/mahui89" target="_blank" title="facebook">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>
+                  
+                  facebook
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">马荟</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    
+
+    
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
