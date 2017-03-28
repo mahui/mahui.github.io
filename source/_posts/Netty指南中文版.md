@@ -91,7 +91,7 @@ public void channelRead(ChannelHandlerContext ctx, Object msg) {
 ```
 4. 当 Netty 犹豫 I/O 错误或者处理器处理事件时抛出异常，导致 Throwable 对象出现时，`exceptionCaught() ` 方法被调用。大多数情况下，补货到的异常应该被记录，与其相关的 channle 也应该在这儿被关闭，当然了，该方法的实现也会因你的不同异常处理方案而不同。比如，你也许想在关闭连接之前发送一个包含错误代码的响应消息。
 
-目前来说一切都很好，我们实现了 `DISCARD` 服务的一般。现在剩下我们去在 `DiscardServerHandler` 中写一个 `main()` 方法来启动服务。
+目前来说一切都很好，我们实现了一半的 `DISCARD` 服务。现在剩下我们去在 `DiscardServerHandler` 中写一个 `main()` 方法来启动服务。
 
 
 ```java
@@ -173,5 +173,121 @@ public class DiscardServer {
 7. 我们现在已经准备好了。剩下的就是绑定端口和启动服务了。在这儿，我们绑定了机器所有网卡的 `8080` 端口。你现在可以调用多次 `bind()` 方法（用不同的绑定地址）。
 
 恭喜你！你已经基于 Netty 完成里你的第一个服务端程序。
+
+## 查看接收到的数据[Looking into the Received Data](http://netty.io/wiki/user-guide-for-4.x.html#looking-into-the-received-data)
+
+现在我们已经写好了我们的第一个服务端程序，我们需要测试它是否正常运行。最简单的方法是使用 `telnet` 命令行。比如，你可以在终端输入 `telnet localhost 8080` 命令行，然后输入一些东西。
+
+但这样就能表示我们的服务运行正常吗？我们实际上并不能准确知道，因为它是个 `discard` 服务。它并不会返回任何信息。为了证明它是真的正常运行，我们可以修改一下服务端程序让它把收到的数据打印出来。
+
+我们已经知道当数据被接收到的时候会调用 `channelRead()` 方法。可以在 `DiscardServerHandler` 的 `channelRead()` 方法中加一些代码：
+```java
+@Override
+public void channelRead(ChannelHandlerContext ctx, Object msg) {
+    ByteBuf in = (ByteBuf) msg;
+    try {
+        while (in.isReadable()) { // (1)
+            System.out.print((char) in.readByte());
+            System.out.flush();
+        }
+    } finally {
+        ReferenceCountUtil.release(msg); // (2)
+    }
+}
+```
+
+1. 这个低效的循环实际上可以替换为: `System.out.println(in.toString(io.netty.util.CharsetUtil.US_ASCII))`
+2. 或者，你可以在这儿调 `in.release()`
+
+如果你再次调用 `telnet` 命令，你会看到服务端程序会把收到的数据打印出来。
+
+discard 服务的全部代码放在 [`io.netty.example.discard`](http://netty.io/4.0/xref/io/netty/example/discard/package-summary.html) 包中。
+
+## 写一个 Echo 服务 [Writing an Echo Server](http://netty.io/wiki/user-guide-for-4.x.html#writing-an-echo-server)
+
+目前为止，我们的服务都是消费数据，而不做任何响应。然而作为一个服务，往往是需要对请求做出响应的。让我们学习如何通过实现 [`ECHO`](http://tools.ietf.org/html/rfc862) 协议（如论接收到任何数据都原样返回）来给客户端返回响应数据。
+
+与我们先前小节中实现的 discard 服务唯一不同的是，我们将接收到的数据发出，而不是将其打印到控制台。因此，需要再次改动 `channelRead()` 方法：
+
+```java
+@Override
+public void channelRead(ChannelHandlerContext ctx, Object msg) {
+   ctx.write(msg); // (1)
+   ctx.flush(); // (2)
+}
+```
+
+1. [`ChannelHandlerContext`](http://netty.io/4.0/api/io/netty/channel/ChannelHandlerContext.html) 对象提供了各种操作可以用来触发各种 I/O 事件以及操作。在这儿我们调用 `write(Object)` 方法将接收到的消息一字不差的返回。请注意，在这儿我们没有像 `DISCARD` 服务一样 release 接收到的消息，因为 Netty 会在你将其写出至网络时将其 release。
+
+2. `ctx.write(Object)` 并不会将消息写到网络上。它只是被放在内部缓冲区，然后被 `ctx.flush()` 方法刷新至网络上。或者你可以用更简洁的 `ctx.writeAndFlush(msg)` 方法。
+
+如果你再次运行 `telnet` 命令，你会发现无论你发送什么内容到服务器上，它都会将其原样返回。
+
+echo 服务的全部代码可以在 [`io.netty.example.echo`](http://netty.io/4.0/xref/io/netty/example/echo/package-summary.html) 包中找到。
+
+## 写一个时间服务 [Writing a Time Server](http://netty.io/wiki/user-guide-for-4.x.html#writing-a-time-server)
+
+本小节需要实现的协议是 [`TIME`](http://tools.ietf.org/html/rfc868) 协议。与之前例子不同的是，它不会接收任何请求，会发送一条消息，里面包含了一个 32 位数字，当消息发送之后，会关闭连接。在本例中，你将了解到如何构造并发送一条消息，并且在服务结束的时候关闭连接。
+
+因为你不打算接受任何消息，而连接一旦建立，你就会将消息发出，所以我们这次不能使用 `channelRead()` 方法。我们需要重写 `channelActive()` 方法。以下为实现：
+
+```java
+package io.netty.example.time;
+
+public class TimeServerHandler extends ChannelInboundHandlerAdapter {
+
+    @Override
+    public void channelActive(final ChannelHandlerContext ctx) { // (1)
+        final ByteBuf time = ctx.alloc().buffer(4); // (2)
+        time.writeInt((int) (System.currentTimeMillis() / 1000L + 2208988800L));
+
+        final ChannelFuture f = ctx.writeAndFlush(time); // (3)
+        f.addListener(new ChannelFutureListener() {
+            @Override
+            public void operationComplete(ChannelFuture future) {
+                assert f == future;
+                ctx.close();
+            }
+        }); // (4)
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        cause.printStackTrace();
+        ctx.close();
+    }
+}
+```
+
+1. 解释一下， `channelActive()` 方法会在连接建立好可以准备交换数据时被调用。我们在这儿写一个可以表示当前时间的 32 位数字。
+
+2. 为了发送一条新消息，我们需要分配一个新的缓冲区 (buffer) 用来存放消息。我们将要写一个 32 位的数字，因此，需要一个容量至少为 4 个字节的 [`ByteBuf`](http://netty.io/4.0/api/io/netty/buffer/ByteBuf.html) 。通过 `ChannelHandlerContext.alloc()` 方法获取当前的 [`ByteBufAllocator`](http://netty.io/4.0/api/io/netty/buffer/ByteBufAllocator.html) 对象并且分配一个新的缓冲区 (buffer)。
+
+3. 像往常一样，我们写构造的数据。  
+但等等， flip 方法呢？ 我们在 NIO 中发送消息之前不需要调用 `java.nio.ByteBuffer.flip()` 方法吗？ `ByteBuf` 没有这个方法，因为它有两个指针: 一个是用来读操作，另一个是用来写操作。当你往 `ByteBuf` 写入数据的时候，写指针(writer index)会变大，而读指针(reader index)没有变化。读指针(reader index) 和 写指针(writer index) 分别体现了消息的开始和结尾位置。  
+对比 NIO 缓冲区，其并没有提供一个清晰的方法可以计算出消息的开始和结束位置，除了调用 flip 方法。当你忘记 flip 缓冲区时，你会遇到麻烦，因为有可能发不出数据或者发错数据。而这样的错误不会在 Netty 发生，因为针对不同的操作，我们有不同的指针。你会发现习惯了没有 flipping out 的生活变得更简单！  
+另一个需要注意的点是, `ChannelHandlerContext.write()` (以及 `writeAndFlush()`) 方法返回一个 [`ChannelFuture`](http://netty.io/4.0/api/io/netty/channel/ChannelFuture.html) 对象。一个 [`ChannelFuture`](http://netty.io/4.0/api/io/netty/channel/ChannelFuture.html) 对象代表一个 I/O 操作还没发生。这意味着任何请求操作都有可能尚未执行，因为 Netty 中所有的操作都是异步的。比如，如下例子中，有可能在消息发出去之前关闭连接:  
+```java
+Channel ch = ...;
+ch.writeAndFlush(message);
+ch.close();
+```
+    因此你需要在 `write()` 方法返回的 [`ChannelFuture`](http://netty.io/4.0/api/io/netty/channel/ChannelFuture.html) 对象完成之后关闭连接，当写操作完成后，它会通知它的监听程序。请注意，`close()` 方法也有可能不会立即关闭连接，他也会返回一个 [`ChannelFuture`](http://netty.io/4.0/api/io/netty/channel/ChannelFuture.html) 对象。
+4. 当写请求完成时我们如何得到通知呢? 很简单，只需要对返回的 `ChannelFuture` 添加 [`ChannelFutureListener`](http://netty.io/4.0/api/io/netty/channel/ChannelFutureListener.html) 即可。在这儿我们创建了一个新的匿名类 [`ChannelFutureListener`](http://netty.io/4.0/api/io/netty/channel/ChannelFutureListener.html) , 当操作完成时它会关闭 `Channel`。  
+要不然你也可以使用预定义的监听器来简化你的代码：
+```
+f.addListener(ChannelFutureListener.CLOSE);
+```
+
+可以使用 UNIX 命令 `rdate` 来测试我们的时间服务是否能如预期工作：
+
+```
+$ rdate -o <port> -p <host>
+```
+
+这儿的 `<port>` 是在 `main()` 方法中指定的端口号，`<host>` 通常是 `localhost` 。
+
+
+
 
 *<未完待续>*
