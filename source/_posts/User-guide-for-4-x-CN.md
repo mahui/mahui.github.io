@@ -266,12 +266,12 @@ public class TimeServerHandler extends ChannelInboundHandlerAdapter {
 3. 像往常一样，我们写构造的数据。  
 但等等， flip 方法呢？ 我们在 NIO 中发送消息之前不需要调用 `java.nio.ByteBuffer.flip()` 方法吗？ `ByteBuf` 没有这个方法，因为它有两个指针: 一个是用来读操作，另一个是用来写操作。当你往 `ByteBuf` 写入数据的时候，写指针(writer index)会变大，而读指针(reader index)没有变化。读指针(reader index) 和 写指针(writer index) 分别体现了消息的开始和结尾位置。  
 对比 NIO 缓冲区，其并没有提供一个清晰的方法可以计算出消息的开始和结束位置，除了调用 flip 方法。当你忘记 flip 缓冲区时，你会遇到麻烦，因为有可能发不出数据或者发错数据。而这样的错误不会在 Netty 发生，因为针对不同的操作，我们有不同的指针。你会发现习惯了没有 flipping out 的生活变得更简单！  
-另一个需要注意的点是, `ChannelHandlerContext.write()` (以及 `writeAndFlush()`) 方法返回一个 [`ChannelFuture`](http://netty.io/4.0/api/io/netty/channel/ChannelFuture.html) 对象。一个 [`ChannelFuture`](http://netty.io/4.0/api/io/netty/channel/ChannelFuture.html) 对象代表一个 I/O 操作还没发生。这意味着任何请求操作都有可能尚未执行，因为 Netty 中所有的操作都是异步的。比如，如下例子中，有可能在消息发出去之前关闭连接:  
-```java
-Channel ch = ...;
-ch.writeAndFlush(message);
-ch.close();
-```
+另一个需要注意的点是, `ChannelHandlerContext.write()` (以及 `writeAndFlush()`) 方法返回一个 [`ChannelFuture`](http://netty.io/4.0/api/io/netty/channel/ChannelFuture.html) 对象。一个 [`ChannelFuture`](http://netty.io/4.0/api/io/netty/channel/ChannelFuture.html) 对象代表一个 I/O 操作还没发生。这意味着任何请求操作都有可能尚未执行，因为 Netty 中所有的操作都是异步的。比如，如下例子中，有可能在消息发出去之前关闭连接:
+    ```java
+    Channel ch = ...;
+    ch.writeAndFlush(message);
+    ch.close();
+    ```
     因此你需要在 `write()` 方法返回的 [`ChannelFuture`](http://netty.io/4.0/api/io/netty/channel/ChannelFuture.html) 对象完成之后关闭连接，当写操作完成后，它会通知它的监听程序。请注意，`close()` 方法也有可能不会立即关闭连接，他也会返回一个 [`ChannelFuture`](http://netty.io/4.0/api/io/netty/channel/ChannelFuture.html) 对象。
 4. 当写请求完成时我们如何得到通知呢? 很简单，只需要对返回的 `ChannelFuture` 添加 [`ChannelFutureListener`](http://netty.io/4.0/api/io/netty/channel/ChannelFutureListener.html) 即可。在这儿我们创建了一个新的匿名类 [`ChannelFutureListener`](http://netty.io/4.0/api/io/netty/channel/ChannelFutureListener.html) , 当操作完成时它会关闭 `Channel`。  
 要不然你也可以使用预定义的监听器来简化你的代码：
