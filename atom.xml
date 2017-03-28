@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://mahui.github.io/"/>
-  <updated>2017-03-28T14:49:52.000Z</updated>
+  <updated>2017-03-28T14:59:52.000Z</updated>
   <id>https://mahui.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://mahui.github.io/2017/03/27/User-guide-for-4-x-CN/"/>
     <id>https://mahui.github.io/2017/03/27/User-guide-for-4-x-CN/</id>
     <published>2017-03-27T07:06:43.000Z</published>
-    <updated>2017-03-28T14:49:52.000Z</updated>
+    <updated>2017-03-28T14:59:52.000Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>Based on <a href="http://netty.io/wiki/user-guide-for-4.x.html" target="_blank" rel="external">User guide for 4.x</a> .</p>
@@ -125,14 +125,13 @@
 但等等， flip 方法呢？ 我们在 NIO 中发送消息之前不需要调用 <code>java.nio.ByteBuffer.flip()</code> 方法吗？ <code>ByteBuf</code> 没有这个方法，因为它有两个指针: 一个是用来读操作，另一个是用来写操作。当你往 <code>ByteBuf</code> 写入数据的时候，写指针(writer index)会变大，而读指针(reader index)没有变化。读指针(reader index) 和 写指针(writer index) 分别体现了消息的开始和结尾位置。<br>
 对比 NIO 缓冲区，其并没有提供一个清晰的方法可以计算出消息的开始和结束位置，除了调用 flip 方法。当你忘记 flip 缓冲区时，你会遇到麻烦，因为有可能发不出数据或者发错数据。而这样的错误不会在 Netty 发生，因为针对不同的操作，我们有不同的指针。你会发现习惯了没有 flipping out 的生活变得更简单！<br>
 另一个需要注意的点是, <code>ChannelHandlerContext.write()</code> (以及 <code>writeAndFlush()</code>) 方法返回一个 <a href="http://netty.io/4.0/api/io/netty/channel/ChannelFuture.html" target="_blank" rel="external"><code>ChannelFuture</code></a> 对象。一个 <a href="http://netty.io/4.0/api/io/netty/channel/ChannelFuture.html" target="_blank" rel="external"><code>ChannelFuture</code></a> 对象代表一个 I/O 操作还没发生。这意味着任何请求操作都有可能尚未执行，因为 Netty 中所有的操作都是异步的。比如，如下例子中，有可能在消息发出去之前关闭连接:</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Channel ch = ...;</div><div class="line">ch.writeAndFlush(message);</div><div class="line">ch.close();</div></pre></td></tr></table></figure>
+<p>因此你需要在 <code>write()</code> 方法返回的 <a href="http://netty.io/4.0/api/io/netty/channel/ChannelFuture.html" target="_blank" rel="external"><code>ChannelFuture</code></a> 对象完成之后关闭连接，当写操作完成后，它会通知它的监听程序。请注意，<code>close()</code> 方法也有可能不会立即关闭连接，他也会返回一个 <a href="http://netty.io/4.0/api/io/netty/channel/ChannelFuture.html" target="_blank" rel="external"><code>ChannelFuture</code></a> 对象。</p>
 </li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Channel ch = ...;</div><div class="line">ch.writeAndFlush(message);</div><div class="line">ch.close();</div></pre></td></tr></table></figure>
-<pre><code>因此你需要在 `write()` 方法返回的 [`ChannelFuture`](http://netty.io/4.0/api/io/netty/channel/ChannelFuture.html) 对象完成之后关闭连接，当写操作完成后，它会通知它的监听程序。请注意，`close()` 方法也有可能不会立即关闭连接，他也会返回一个 [`ChannelFuture`](http://netty.io/4.0/api/io/netty/channel/ChannelFuture.html) 对象。
-</code></pre>
-<ol start="4">
-<li>当写请求完成时我们如何得到通知呢? 很简单，只需要对返回的 <code>ChannelFuture</code> 添加 <a href="http://netty.io/4.0/api/io/netty/channel/ChannelFutureListener.html" target="_blank" rel="external"><code>ChannelFutureListener</code></a> 即可。在这儿我们创建了一个新的匿名类 <a href="http://netty.io/4.0/api/io/netty/channel/ChannelFutureListener.html" target="_blank" rel="external"><code>ChannelFutureListener</code></a> , 当操作完成时它会关闭 <code>Channel</code>。<br>
-要不然你也可以使用预定义的监听器来简化你的代码：</li>
+<li>
+<p>当写请求完成时我们如何得到通知呢? 很简单，只需要对返回的 <code>ChannelFuture</code> 添加 <a href="http://netty.io/4.0/api/io/netty/channel/ChannelFutureListener.html" target="_blank" rel="external"><code>ChannelFutureListener</code></a> 即可。在这儿我们创建了一个新的匿名类 <a href="http://netty.io/4.0/api/io/netty/channel/ChannelFutureListener.html" target="_blank" rel="external"><code>ChannelFutureListener</code></a> , 当操作完成时它会关闭 <code>Channel</code>。<br>
+要不然你也可以使用预定义的监听器来简化你的代码：</p>
+</li>
 </ol>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">f.addListener(ChannelFutureListener.CLOSE);</div></pre></td></tr></table></figure>
 <p>可以使用 UNIX 命令 <code>rdate</code> 来测试我们的时间服务是否能如预期工作：</p>
