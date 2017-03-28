@@ -77,11 +77,6 @@ deploy:
   type: git
   repo: git@github.com:mahui/mahui.github.io.git
 
-githubEmojis:
-  enable: true
-  className: github-emoji
-  unicode: false
-  localEmojis:
 
 search:
   path: search.xml
@@ -91,3 +86,12 @@ search:
 
 toc:
   maxDepth: 3
+
+markdown:
+  render:
+    html: true
+    xhtmlOut: false
+    breaks: false
+    linkify: true
+    typographer: true
+    quotes: '“”‘’'

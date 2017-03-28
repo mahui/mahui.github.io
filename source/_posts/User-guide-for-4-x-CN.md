@@ -9,7 +9,7 @@ tags:
 - 翻译
 ---
 
-> based on [User guide for 4.x]("https://github.com/netty/netty/wiki/User-guide-for-4.x")
+> Based on [User guide for 4.x](http://netty.io/wiki/user-guide-for-4.x.html) .
 
 
 
@@ -275,19 +275,96 @@ ch.close();
     因此你需要在 `write()` 方法返回的 [`ChannelFuture`](http://netty.io/4.0/api/io/netty/channel/ChannelFuture.html) 对象完成之后关闭连接，当写操作完成后，它会通知它的监听程序。请注意，`close()` 方法也有可能不会立即关闭连接，他也会返回一个 [`ChannelFuture`](http://netty.io/4.0/api/io/netty/channel/ChannelFuture.html) 对象。
 4. 当写请求完成时我们如何得到通知呢? 很简单，只需要对返回的 `ChannelFuture` 添加 [`ChannelFutureListener`](http://netty.io/4.0/api/io/netty/channel/ChannelFutureListener.html) 即可。在这儿我们创建了一个新的匿名类 [`ChannelFutureListener`](http://netty.io/4.0/api/io/netty/channel/ChannelFutureListener.html) , 当操作完成时它会关闭 `Channel`。  
 要不然你也可以使用预定义的监听器来简化你的代码：
-```
+```java
 f.addListener(ChannelFutureListener.CLOSE);
 ```
 
 可以使用 UNIX 命令 `rdate` 来测试我们的时间服务是否能如预期工作：
-
-```
+```shell
 $ rdate -o <port> -p <host>
 ```
 
 这儿的 `<port>` 是在 `main()` 方法中指定的端口号，`<host>` 通常是 `localhost` 。
 
+## 写一个时间客户端 [Writing a Time Client](https://github.com/netty/netty/wiki/User-guide-for-4.x#writing-a-time-client)
 
+不想 `DISCARD` 和 `ECHO` 服务， `TIME` 服务需要一个客户端。因为普通人很难将 32 为二进制数据翻译为日历上对应的时间。在本小节，我们将讨论如何确保服务正确的运行并且学习如何用 Netty 写一个客户端。
 
+Netty 服务端和客户端最大也是唯一的区别就在于使用不同的 [`bootstrap`](http://netty.io/4.0/api/io/netty/bootstrap/Bootstrap.html) 和 [`Channel`](http://netty.io/4.0/api/io/netty/channel/Channel.html) 实现。请注意观察以下代码：
+
+```java
+package io.netty.example.time;
+
+public class TimeClient {
+    public static void main(String[] args) throws Exception {
+        String host = args[0];
+        int port = Integer.parseInt(args[1]);
+        EventLoopGroup workerGroup = new NioEventLoopGroup();
+
+        try {
+            Bootstrap b = new Bootstrap(); // (1)
+            b.group(workerGroup); // (2)
+            b.channel(NioSocketChannel.class); // (3)
+            b.option(ChannelOption.SO_KEEPALIVE, true); // (4)
+            b.handler(new ChannelInitializer<SocketChannel>() {
+                @Override
+                public void initChannel(SocketChannel ch) throws Exception {
+                    ch.pipeline().addLast(new TimeClientHandler());
+                }
+            });
+
+            // 打开客户端
+            ChannelFuture f = b.connect(host, port).sync(); // (5)
+
+            // 等待连接关闭
+            f.channel().closeFuture().sync();
+        } finally {
+            workerGroup.shutdownGracefully();
+        }
+    }
+}
+```
+
+1. [`bootstrap`](http://netty.io/4.0/api/io/netty/bootstrap/Bootstrap.html) 与 [`ServerBootstrap`](http://netty.io/4.0/api/io/netty/bootstrap/ServerBootstrap.html) 很类似，除了它使用的是非服务端通道 (non-server channels), 如客户端或者无连接通道。
+
+2. 如果你只指定了一个 [`EventLoopGroup`](http://netty.io/4.0/api/io/netty/channel/EventLoopGroup.html) ，它将会既当作 boss 组又会当作 worker 组。虽然客户端并不使用 boss worker 。
+
+3. [`NioSocketChannel`](http://netty.io/4.0/api/io/netty/channel/socket/nio/NioSocketChannel.html) 替换 [`NioServerSocketChannel`](http://netty.io/4.0/api/io/netty/channel/socket/nio/NioServerSocketChannel.html) , 用来创建客户端的 [`Channel`](http://netty.io/4.0/api/io/netty/channel/Channel.html) 。
+
+4. 留意我们并没有在这儿像 `ServerBootstrap` 一样使用 `childOption()` 方法，因为客户端的 [`SocketChannel`](http://netty.io/4.0/api/io/netty/channel/socket/SocketChannel.html) 没有父。
+
+5. 与服务端调用 `bind()` 不同，我们应该在客户端调用 `connect()` 方法。
+
+如你所见，客户端的代码并没有与服务端差太多。那么 [`ChannelHandler`](http://netty.io/4.0/api/io/netty/channel/ChannelHandler.html) 该如何实现呢？它应该从服务端接收到 32 为的整数，将其翻译为人类可读的格式并将其打印出来，然后关闭连接：
+
+```java
+package io.netty.example.time;
+
+import java.util.Date;
+
+public class TimeClientHandler extends ChannelInboundHandlerAdapter {
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        ByteBuf m = (ByteBuf) msg; // (1)
+        try {
+            long currentTimeMillis = (m.readUnsignedInt() - 2208988800L) * 1000L;
+            System.out.println(new Date(currentTimeMillis));
+            ctx.close();
+        } finally {
+            m.release();
+        }
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        cause.printStackTrace();
+        ctx.close();
+    }
+}
+```
+
+1. 在 TCP/IP 中，Netty 将发送来的数据读到 [`ByteBuf`](http://netty.io/4.0/api/io/netty/buffer/ByteBuf.html) 中。
+
+看上去很简单，并且没有发现什么与服务端例子中不同的地方。然而，这个处理器有时候会因为引发 `IndexOutOfBoundsException` 异常，而拒绝工作。我们将在下一小节讨论这为什么会发生。
 
 *<未完待续>*
