@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://mahui.github.io/"/>
-  <updated>2017-03-28T14:59:52.000Z</updated>
+  <updated>2017-03-28T15:01:39.000Z</updated>
   <id>https://mahui.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://mahui.github.io/2017/03/27/User-guide-for-4-x-CN/"/>
     <id>https://mahui.github.io/2017/03/27/User-guide-for-4-x-CN/</id>
     <published>2017-03-27T07:06:43.000Z</published>
-    <updated>2017-03-28T14:59:52.000Z</updated>
+    <updated>2017-03-28T15:01:39.000Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>Based on <a href="http://netty.io/wiki/user-guide-for-4.x.html" target="_blank" rel="external">User guide for 4.x</a> .</p>
@@ -131,9 +131,9 @@
 <li>
 <p>当写请求完成时我们如何得到通知呢? 很简单，只需要对返回的 <code>ChannelFuture</code> 添加 <a href="http://netty.io/4.0/api/io/netty/channel/ChannelFutureListener.html" target="_blank" rel="external"><code>ChannelFutureListener</code></a> 即可。在这儿我们创建了一个新的匿名类 <a href="http://netty.io/4.0/api/io/netty/channel/ChannelFutureListener.html" target="_blank" rel="external"><code>ChannelFutureListener</code></a> , 当操作完成时它会关闭 <code>Channel</code>。<br>
 要不然你也可以使用预定义的监听器来简化你的代码：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">f.addListener(ChannelFutureListener.CLOSE);</div></pre></td></tr></table></figure>
 </li>
 </ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">f.addListener(ChannelFutureListener.CLOSE);</div></pre></td></tr></table></figure>
 <p>可以使用 UNIX 命令 <code>rdate</code> 来测试我们的时间服务是否能如预期工作：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ rdate -o &lt;port&gt; -p &lt;host&gt;</div></pre></td></tr></table></figure>
 <p>这儿的 <code>&lt;port&gt;</code> 是在 <code>main()</code> 方法中指定的端口号，<code>&lt;host&gt;</code> 通常是 <code>localhost</code> 。</p>
