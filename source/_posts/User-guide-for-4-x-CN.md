@@ -275,9 +275,9 @@ public class TimeServerHandler extends ChannelInboundHandlerAdapter {
     因此你需要在 `write()` 方法返回的 [`ChannelFuture`](http://netty.io/4.0/api/io/netty/channel/ChannelFuture.html) 对象完成之后关闭连接，当写操作完成后，它会通知它的监听程序。请注意，`close()` 方法也有可能不会立即关闭连接，他也会返回一个 [`ChannelFuture`](http://netty.io/4.0/api/io/netty/channel/ChannelFuture.html) 对象。
 4. 当写请求完成时我们如何得到通知呢? 很简单，只需要对返回的 `ChannelFuture` 添加 [`ChannelFutureListener`](http://netty.io/4.0/api/io/netty/channel/ChannelFutureListener.html) 即可。在这儿我们创建了一个新的匿名类 [`ChannelFutureListener`](http://netty.io/4.0/api/io/netty/channel/ChannelFutureListener.html) , 当操作完成时它会关闭 `Channel`。  
 要不然你也可以使用预定义的监听器来简化你的代码：
-```java
-f.addListener(ChannelFutureListener.CLOSE);
-```
+    ```java
+    f.addListener(ChannelFutureListener.CLOSE);
+    ```
 
 可以使用 UNIX 命令 `rdate` 来测试我们的时间服务是否能如预期工作：
 ```shell
