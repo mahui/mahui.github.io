@@ -367,4 +367,251 @@ public class TimeClientHandler extends ChannelInboundHandlerAdapter {
 
 看上去很简单，并且没有发现什么与服务端例子中不同的地方。然而，这个处理器有时候会因为引发 `IndexOutOfBoundsException` 异常，而拒绝工作。我们将在下一小节讨论这为什么会发生。
 
-*<未完待续>*
+## 处理基于流的传输 [Dealing with a Stream-based Transport](http://netty.io/wiki/user-guide-for-4.x.html#dealing-with-a-stream-based-transport)
+
+### 套接字缓冲区的一个小小注意事项 [One Small Caveat of Socket Buffer](http://netty.io/wiki/user-guide-for-4.x.html#one-small-caveat-of-socket-buffer)
+
+在基于流传输中，比如 TCP/IP ， 接收到的数据存放在一个套接字接受缓冲区 (socket receive buffer) 中。可惜的是，基于流的传输的缓冲区是一个字节队列，而不是包队列。这就意味着，即使你发了两个独立的数据包，操作系统也不会那它们当两条消息处理，而只是当作一串数组。因此，这不能保证你读到的数据确实就是你远程写入的数据。举个例子，我们假定操作系统的 TCP/IP 栈接收到三个包：
+
+![](https://camo.githubusercontent.com/24ed1176ecca468dfb2b8b017bb927a8715a16f2/687474703a2f2f756d6c2e6d766e7365617263682e6f72672f676973742f3832653366626530653264346466323833323262)
+
+因为基于流的传输协议的这个属性，应用程序读到的数据很有可能是这样的碎片:
+
+![](https://camo.githubusercontent.com/5b595baf5071bf669f81d08b7554064f4142cc69/687474703a2f2f756d6c2e6d766e7365617263682e6f72672f676973742f6233316330626437626266633639666438326436)
+
+因此，无论是服务端还是客户端，在接受数据的部分，应该将收到的数据碎片整理进一个或者多个有意义的帧中，以便可以被程序逻辑轻松理解。在上面的例子中，接收到的数据应该是这样的帧：
+
+![](https://camo.githubusercontent.com/24ed1176ecca468dfb2b8b017bb927a8715a16f2/687474703a2f2f756d6c2e6d766e7365617263682e6f72672f676973742f3832653366626530653264346466323833323262)
+
+### 第一种解决方案 [The First Solution](http://netty.io/wiki/user-guide-for-4.x.html#the-first-solution)
+
+现在让我们回到 `TIME` 客户单的例子中。在这儿我们有同样的问题。一个 32 位的整数是非常小数据，它经常不太可能被拆分为碎片。但问题是，它是有可能被拆分成碎片的，随着交互次数的增长，这种几率也随之增长。
+
+简单的解决方案是，创建一个内部累计缓冲区，等待 4 字节全部被接收到内部缓冲区。下面的修改过的 `TimeClientHandler` 实现解决了这个问题:
+
+```java
+package io.netty.example.time;
+
+import java.util.Date;
+
+public class TimeClientHandler extends ChannelInboundHandlerAdapter {
+    private ByteBuf buf;
+
+    @Override
+    public void handlerAdded(ChannelHandlerContext ctx) {
+        buf = ctx.alloc().buffer(4); // (1)
+    }
+
+    @Override
+    public void handlerRemoved(ChannelHandlerContext ctx) {
+        buf.release(); // (1)
+        buf = null;
+    }
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        ByteBuf m = (ByteBuf) msg;
+        buf.writeBytes(m); // (2)
+        m.release();
+
+        if (buf.readableBytes() >= 4) { // (3)
+            long currentTimeMillis = (buf.readUnsignedInt() - 2208988800L) * 1000L;
+            System.out.println(new Date(currentTimeMillis));
+            ctx.close();
+        }
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        cause.printStackTrace();
+        ctx.close();
+    }
+}
+```
+
+1. [`ChannelHandler`](http://netty.io/4.0/api/io/netty/channel/ChannelHandler.html) 有两个生命周期的监听方法: `handlerAdded()` 和 `handlerRemoved()` 。只要不长时间阻塞，你可以执行任意的初始化\去初始化方法。
+
+2. 首先，接收到的数据应该累计到缓冲区。
+
+3. 然后，处理器必须检测缓冲区是否有足够的数据，本例中是 4 个字节，之后才会处理实际的程序业务逻辑。否则， Netty 会在有更多数据到来时再次调用 `channelRead()` 方法，直到累计到足够 4 个字节。
+
+### 第二种解决方案 [The Second Solution](http://netty.io/wiki/user-guide-for-4.x.html#the-second-solution)
+
+虽然第一种解决方案解决了 `TIME` 客户端的问题，修改过的处理器看上去并不简洁。想象一下，一个复杂的协议，数据由多个不定长度的字段组成。你的 [`ChannelInboundHandler`](http://netty.io/4.0/api/io/netty/channel/ChannelInboundHandler.html) 的实现立马会变得不可维护。
+
+就像你已经注意到的，可以添加多个 [`ChannelHandler`](http://netty.io/4.0/api/io/netty/channel/ChannelHandler.html) 到一个 [`ChannelPipeline`](http://netty.io/4.0/api/io/netty/channel/ChannelPipeline.html) ，因此，你可以将一个大的 [`ChannelHandler`](http://netty.io/4.0/api/io/netty/channel/ChannelHandler.html) 拆分为多个模块，以降低应用的复杂度。例如，你可以将 `TimeClientHandler` 拆分为两个处理器:
+
+- `TimeDecoder` 用来处理拆分问题，以及
+- `TimeClientHandler` 的原始实现。
+
+幸运的是， Netty 提供了一个可被继承的开箱即用的类:
+
+```java
+package io.netty.example.time;
+
+public class TimeDecoder extends ByteToMessageDecoder { // (1)
+    @Override
+    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) { // (2)
+        if (in.readableBytes() < 4) {
+            return; // (3)
+        }
+
+        out.add(in.readBytes(4)); // (4)
+    }
+}
+```
+
+1. [`ByteToMessageDecoder`](http://netty.io/4.0/api/io/netty/handler/codec/ByteToMessageDecoder.html) 是 [`ChannelInboundHandler`](http://netty.io/4.0/api/io/netty/channel/ChannelInboundHandler.html) 的一个实现类，可以让处理拆分问题变得简单。
+
+2.  当数据被接收的时候 [`ByteToMessageDecoder`](http://netty.io/4.0/api/io/netty/handler/codec/ByteToMessageDecoder.html)  调用 `decode()` 方法来内部维持缓冲区数据累积。
+
+3. 累积缓冲区数据累积不够多的时候， `decode()` 可以添加任何东西到 out 。接收到更多的数据时，[`ByteToMessageDecoder`](http://netty.io/4.0/api/io/netty/handler/codec/ByteToMessageDecoder.html) 会再次调用 `decode()` 方法。
+
+4. 如果 `decode()` 添加了个对象到 out, 说明解码器成功的解码了消息。 [`ByteToMessageDecoder`](http://netty.io/4.0/api/io/netty/handler/codec/ByteToMessageDecoder.html) 会将累积缓冲区中已经读过的数据丢弃。记住，你不需要解码多消息， [`ByteToMessageDecoder`](http://netty.io/4.0/api/io/netty/handler/codec/ByteToMessageDecoder.html) 会反复调用 `decode()` 方法，直到它不添加任何内容到 out。
+
+现在我们有另外一个处理器要添加到 [`ChannelPipeline`](http://netty.io/4.0/api/io/netty/channel/ChannelPipeline.html) , 我们需要修改 `TimeClient` 中 [`ChannelInitializer`](http://netty.io/4.0/api/io/netty/channel/ChannelInitializer.html) 的实现：
+
+```java
+b.handler(new ChannelInitializer<SocketChannel>() {
+    @Override
+    public void initChannel(SocketChannel ch) throws Exception {
+        ch.pipeline().addLast(new TimeDecoder(), new TimeClientHandler());
+    }
+});
+```
+
+如果你是一个大胆到用户，可以尝试下更简单的解码器，[`ReplayingDecoder`](http://netty.io/4.0/api/io/netty/handler/codec/ReplayingDecoder.html) 。当然了，你需要参考下 API 文档以获取更多信息。
+
+```java
+public class TimeDecoder extends ReplayingDecoder<Void> {
+    @Override
+    protected void decode(
+            ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
+        out.add(in.readBytes(4));
+    }
+}
+```
+
+另外，Netty 提供了很多开箱即用的解码器供你可以很简答的就能实现大多数协议，避免你需要实现一个庞大的不可维护的处理器。请参考下面的包中的更详细的例子：
+
+- [`io.netty.example.factorial`](http://netty.io/4.0/xref/io/netty/example/factorial/package-summary.html) , 二进制协议，以及
+- [`io.netty.example.telnet`](http://netty.io/4.0/xref/io/netty/example/telnet/package-summary.html) , 基于文本行的协议。
+
+## 使用 POJO 替代 ByteBuf [Speaking in POJO instead of ByteBuf](http://netty.io/wiki/user-guide-for-4.x.html#speaking-in-pojo-instead-of-bytebuf)
+
+回顾目前所有的例子，都是用 [`ByteBuf`](http://netty.io/4.0/api/io/netty/buffer/ByteBuf.html) 作为协议中消息的主要数据结构。在本小节，我们将改善 `TIME` 协议的客户端和服务端，使用 POJO 替换 [`ByteBuf`](http://netty.io/4.0/api/io/netty/buffer/ByteBuf.html) 。
+
+在 [`ChannelHandler`](http://netty.io/4.0/api/io/netty/channel/ChannelHandler.html) 中使用 POJO 的优点是显而易见的；将从 ByteBuf 中提取信息部分的代码从处理器中分离出来，可以让处理器变得更可维护，可复用。在 `TIME` 客户端和服务端的例子中，我们只是读取一个 32 位的整数，直接用 ByteBuf 不会是个大问题。然而，你会发现，在现实中的协议，将其分离开来是很有必要的。
+
+首先，让我们定义一个新的对象，UnixTime。
+
+```java
+package io.netty.example.time;
+
+import java.util.Date;
+
+public class UnixTime {
+
+    private final long value;
+
+    public UnixTime() {
+        this(System.currentTimeMillis() / 1000L + 2208988800L);
+    }
+
+    public UnixTime(long value) {
+        this.value = value;
+    }
+
+    public long value() {
+        return value;
+    }
+
+    @Override
+    public String toString() {
+        return new Date((value() - 2208988800L) * 1000L).toString();
+    }
+}
+```
+
+我们修改 `TimeDecoder`，生产一个 `UnixTime`，替代 [`ByteBuf`](http://netty.io/4.0/api/io/netty/buffer/ByteBuf.html) 。
+
+```java
+@Override
+protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
+    if (in.readableBytes() < 4) {
+        return;
+    }
+
+    out.add(new UnixTime(in.readUnsignedInt()));
+}
+```
+
+随着解码器的修改， `TimeClientHandler` 不再使用 [`ByteBuf`](http://netty.io/4.0/api/io/netty/buffer/ByteBuf.html) :
+
+```java
+@Override
+public void channelRead(ChannelHandlerContext ctx, Object msg) {
+    UnixTime m = (UnixTime) msg;
+    System.out.println(m);
+    ctx.close();
+}
+```
+
+是不是简单优雅了很多？服务端用同样的方法修改。首先修改 `TimeServerHandler` ：
+
+```
+@Override
+public void channelActive(ChannelHandlerContext ctx) {
+    ChannelFuture f = ctx.writeAndFlush(new UnixTime());
+    f.addListener(ChannelFutureListener.CLOSE);
+}
+```
+
+现在唯一缺乏的部分就是编码器了，实现 [`ChannelOutboundHandler`](http://netty.io/4.0/api/io/netty/channel/ChannelOutboundHandler.html) ，将一个 `UnixTime` 对象转换为 [`ByteBuf`](http://netty.io/4.0/api/io/netty/buffer/ByteBuf.html) 。写一个编码器很简单，因为编码消息的时候，不需要处理拆包组包的问题。
+
+```java
+package io.netty.example.time;
+
+public class TimeEncoder extends ChannelOutboundHandlerAdapter {
+    @Override
+    public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) {
+        UnixTime m = (UnixTime) msg;
+        ByteBuf encoded = ctx.alloc().buffer(4);
+        encoded.writeInt((int)m.value());
+        ctx.write(encoded, promise); // (1)
+    }
+}
+```
+
+1. 本行中有几个重要的事情。  
+第一，通过 [`ChannelPromise`] , Netty 可以标记将编码过的消息写出去的失败或者成功状态。  
+第二，不需要调用 `ctx.flush()` 。有一个专门的处理器方法 `void flush(ChannelHandlerContext ctx)` 用来覆盖 `flush()` 操作。
+
+想要更简单，你可以使用 [`MessageToByteEncoder`](http://netty.io/4.0/api/io/netty/handler/codec/MessageToByteEncoder.html) :
+
+```java
+public class TimeEncoder extends MessageToByteEncoder<UnixTime> {
+    @Override
+    protected void encode(ChannelHandlerContext ctx, UnixTime msg, ByteBuf out) {
+        out.writeInt((int)msg.value());
+    }
+}
+```
+
+最后一步是在服务端将 `TimeEncoder` 放进 [`ChannelPipeline`](http://netty.io/4.0/api/io/netty/channel/ChannelPipeline.html) ,插在 `TimeServerHandler` 之前。这只是一个微不足道的小工作了。
+
+## 关闭你的应用 [Shutting Down Your Application](http://netty.io/wiki/user-guide-for-4.x.html#shutting-down-your-application)
+
+关闭一个 Netty 应用很简单，通过 `shutdownGracefully()` 方法将你创建的所有 [`EventLoopGroup`](http://netty.io/4.0/api/io/netty/channel/EventLoopGroup.html) 。当所有的 [`EventLoopGroup`](http://netty.io/4.0/api/io/netty/channel/EventLoopGroup.html) 都完全关闭，并且相应群组中的 [`Channel`](http://netty.io/4.0/api/io/netty/channel/Channel.html) 都已经关闭的时候，它会返回一个 [`Future`](http://netty.io/4.0/api/io/netty/util/concurrent/Future.html) 对象通知你。
+
+## 总结
+
+在本章，我们通过展示如何用 Netty 编写一个完整的网络应用，快速的浏览了一次 Netty。
+
+在接下来的章节里，有关于 Netty 的更多呃详细信息。我们也鼓励你浏览 [`io.netty.example`](https://github.com/netty/netty/tree/4.0/example/src/main/java/io/netty/example) 包中的例子。
+
+[社区](http://netty.io/community.html) 随时等待解决你的问题，也一直期待你的想法和反馈，改善 Netty 和文档。
+
+
+
+>如有问题，请提 [issue](https://github.com/mahui/netty-user-guide-for-4.x-CN/issues)
