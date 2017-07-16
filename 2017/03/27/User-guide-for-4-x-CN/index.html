@@ -89,31 +89,34 @@
 
 
 
-<meta name="description" content="Based on User guide for 4.x .
+<meta name="description" content="Netty 用户指南中文版
+Based on User guide for 4.x .
 
 序言 Preface
 问题 The Problem
-如今我们使用通用的应用程序或者库来彼此通讯。比如，我们经常使用 HTTP 客户端库从远程服务器接收信息或者执行远程服务的调用。但无论如何，一个通用的协议或者它们的实现有时候可用性不是太好。这就是为什么有时候我们并不使用通用的 HTTP 协议来交换大数据、电子邮件信息以及金融数据和多人">
+如今我们使用通用的应用程序或者库来彼此通讯。比如，我们经常使用 HTTP 客户端库从远程服务器接收信息或者执行远程服务的调用。但无论如何，一个通用的协议或者它们的实现有时候可用性不是太好。这就是为什么有时候我们并不使用通用的 HTTP 协议来交换大数据、电">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Netty用户指南4.x">
 <meta property="og:url" content="https://mahui.github.io/2017/03/27/User-guide-for-4-x-CN/index.html">
 <meta property="og:site_name" content="一个涂鸦板">
-<meta property="og:description" content="Based on User guide for 4.x .
+<meta property="og:description" content="Netty 用户指南中文版
+Based on User guide for 4.x .
 
 序言 Preface
 问题 The Problem
-如今我们使用通用的应用程序或者库来彼此通讯。比如，我们经常使用 HTTP 客户端库从远程服务器接收信息或者执行远程服务的调用。但无论如何，一个通用的协议或者它们的实现有时候可用性不是太好。这就是为什么有时候我们并不使用通用的 HTTP 协议来交换大数据、电子邮件信息以及金融数据和多人">
+如今我们使用通用的应用程序或者库来彼此通讯。比如，我们经常使用 HTTP 客户端库从远程服务器接收信息或者执行远程服务的调用。但无论如何，一个通用的协议或者它们的实现有时候可用性不是太好。这就是为什么有时候我们并不使用通用的 HTTP 协议来交换大数据、电">
 <meta property="og:image" content="https://camo.githubusercontent.com/24ed1176ecca468dfb2b8b017bb927a8715a16f2/687474703a2f2f756d6c2e6d766e7365617263682e6f72672f676973742f3832653366626530653264346466323833323262">
 <meta property="og:image" content="https://camo.githubusercontent.com/5b595baf5071bf669f81d08b7554064f4142cc69/687474703a2f2f756d6c2e6d766e7365617263682e6f72672f676973742f6233316330626437626266633639666438326436">
 <meta property="og:image" content="https://camo.githubusercontent.com/24ed1176ecca468dfb2b8b017bb927a8715a16f2/687474703a2f2f756d6c2e6d766e7365617263682e6f72672f676973742f3832653366626530653264346466323833323262">
-<meta property="og:updated_time" content="2017-03-29T14:19:19.000Z">
+<meta property="og:updated_time" content="2017-07-16T16:38:57.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Netty用户指南4.x">
-<meta name="twitter:description" content="Based on User guide for 4.x .
+<meta name="twitter:description" content="Netty 用户指南中文版
+Based on User guide for 4.x .
 
 序言 Preface
 问题 The Problem
-如今我们使用通用的应用程序或者库来彼此通讯。比如，我们经常使用 HTTP 客户端库从远程服务器接收信息或者执行远程服务的调用。但无论如何，一个通用的协议或者它们的实现有时候可用性不是太好。这就是为什么有时候我们并不使用通用的 HTTP 协议来交换大数据、电子邮件信息以及金融数据和多人">
+如今我们使用通用的应用程序或者库来彼此通讯。比如，我们经常使用 HTTP 客户端库从远程服务器接收信息或者执行远程服务的调用。但无论如何，一个通用的协议或者它们的实现有时候可用性不是太好。这就是为什么有时候我们并不使用通用的 HTTP 协议来交换大数据、电">
 <meta name="twitter:image" content="https://camo.githubusercontent.com/24ed1176ecca468dfb2b8b017bb927a8715a16f2/687474703a2f2f756d6c2e6d766e7365617263682e6f72672f676973742f3832653366626530653264346466323833323262">
 
 
@@ -372,8 +375,8 @@
               
                 <span class="post-meta-item-text">更新于</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-03-29T22:19:19+08:00">
-                2017-03-29
+              <time title="更新于" itemprop="dateModified" datetime="2017-07-17T00:38:57+08:00">
+                2017-07-17
               </time>
             
           </span>
@@ -404,6 +407,17 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/03/27/User-guide-for-4-x-CN/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/03/27/User-guide-for-4-x-CN/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -427,16 +441,18 @@
 
       
         <blockquote>
-<p>Based on <a href="http://netty.io/wiki/user-guide-for-4.x.html" target="_blank" rel="external">User guide for 4.x</a> .</p>
+<p>Netty 用户指南中文版<br>
+Based on <a href="http://netty.io/wiki/user-guide-for-4.x.html" target="_blank" rel="external">User guide for 4.x</a> .</p>
 </blockquote>
 <h1 id="序言-preface">序言 <a href="http://netty.io/wiki/user-guide-for-4.x.html#preface" target="_blank" rel="external">Preface</a></h1>
 <h2 id="问题-the-problem">问题 <a href="http://netty.io/wiki/user-guide-for-4.x.html#the-problem" target="_blank" rel="external">The Problem</a></h2>
 <p>如今我们使用通用的应用程序或者库来彼此通讯。比如，我们经常使用 HTTP 客户端库从远程服务器接收信息或者执行远程服务的调用。但无论如何，一个通用的协议或者它们的实现有时候可用性不是太好。这就是为什么有时候我们并不使用通用的 HTTP 协议来交换大数据、电子邮件信息以及金融数据和多人网络游戏数据这种近实时的数据。所需要的是为了一个专门的目的去实现一个高度优化的协议。比如，你可能需为了基于 AJAX 的聊天应用，媒体传输，或者大文件传输去实现一个优化的 HTTP 服务。你甚至可以为了你的需求去精确的定义并实现一个全新的协议。另外一个经常发生的情况是你必须去处理系统中遗留的专门协议去确保与旧系统的交互。这种情况下重要的是，我们如何能够快速的实现该协议，并且不会牺牲应用程序的稳定性和性能。</p>
 <h2 id="解决方案-the-solution">解决方案 <a href="http://netty.io/wiki/user-guide-for-4.x.html#the-solution" target="_blank" rel="external">The Solution</a></h2>
 <p><a href="http://netty.io" target="_blank" rel="external">Netty</a> 是一个提供了异步事件驱动 (asynchronous event-driven) 网络应用程序框架和工具的杰作，可以用来快速开发可维护的，高性能 · 高可用的服务端和客户端协议。</p>
-<p>从另一方面来讲，Netty 是一个可以快速开发网络程序如客户端和服务端协议的 NIO 客户端/服务端框架。它大大的简化了如 TCP 和 UDP 这类套接字服务的网络应用程序的开发并优化了其开发流程。</p>
+<p>从另一方面来讲，Netty 是一个可以快速开发网络程序，如客户端和服务端协议的 NIO 客户端/服务端框架。它大大的简化了如 TCP 和 UDP 这类套接字服务的网络应用程序的开发并优化了其开发流程。</p>
 <p>“快速简单”并不意味着开发出的应用程序的可维护性变差或者遇到性能问题。 Netty 从大量的如 FTP、SMPT、HTTP 以及各种二进制文本传输协议的实现中获得经验，并精心设计。因此， Netty 成功的获得了可以快速开发，并且不妥协性能、稳定性以及灵活性的方法。</p>
-<p>一些用户用户或者发现过其他一些网络应用框架也声称有以上优势，可能会想问 Netty 和它们有何不同。答案是，设计哲学。 Netty 从一开始就设计得为你提供舒适的 API 及实现。这不是什么可感知的事务，但你会意识到这些设计哲学让你的生活变得更简单，就像你开始阅读这份指南，并且开始轻松使用 Netty 。</p>
+<p>一些用户用户或者发现过其他一些网络应用框架也声称有以上优势，可能会想问 Netty 和它们有何不同。答案是，设计哲学。 Netty 从一开始就设计得为你提供舒适的 API 及实现。这虽非什么可感知的事物，但你会意识到这些设计哲学让你的生活变得更简单，如同你开始阅读这份指南，并且开始轻松使用 Netty 。</p>
+<a id="more"></a>
 <h1 id="开始-getting-started">开始 <a href="http://netty.io/wiki/user-guide-for-4.x.html#getting-started" target="_blank" rel="external">Getting Started</a></h1>
 <p>本章指南围绕着 Netty 的核心结构，据一些简单的例子，让你轻松开始。本章结束后，你将可在 Netty 之上编写客户端和服务端。</p>
 <p>如果你学习东西的时候喜欢使用自上而下分析法，那么你也许可以从第二章，架构总览开始，然后回到这里。</p>
@@ -667,6 +683,27 @@
     <div>
       
         
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/pay/wechat_pay.jpg" alt="马荟 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/pay/alipay.jpg" alt="马荟 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
 
       
     </div>
@@ -724,8 +761,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/07/17/Docker-Start-Up-1/" rel="prev" title="Docker-Start-Up-1">
-                Docker-Start-Up-1 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/07/17/Docker-Start-Up-1/" rel="prev" title="Docker初探">
+                Docker初探 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -751,6 +788,13 @@
 
           
   <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
     
   </div>
 
@@ -1034,6 +1078,26 @@
 
   
 
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://mahuisblog.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://mahui.github.io/2017/03/27/User-guide-for-4-x-CN/';
+          this.page.identifier = '2017/03/27/User-guide-for-4-x-CN/';
+          this.page.title = 'Netty用户指南4.x';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://mahuisblog.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
 
   
 
